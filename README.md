@@ -1,1 +1,1 @@
-# otus
+# OTUS Lessons

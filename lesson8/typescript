@@ -1,0 +1,710 @@
+Script started on 2020-11-18 15:30:54+03:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="99" LINES="37"]
+]0;meno@meno-virtual-machine: ~/Desktop/otus/lesson8[01;32mmeno@meno-virtual-machine[00m:[01;34m~/Desktop/otus/lesson8[00m$ vagrant ssh server
+Last login: Wed Nov 18 12:29:07 2020 from 10.0.2.2
+]0;vagrant@server:~[vagrant@server ~]$ [K[vagrant@server ~]$ [K[vagrant@server ~]$ [K[vagrant@server ~]$ [K[vagrant@server ~]$ [K[vagrant@server ~]$ [K[vagrant@server ~]$ [K[vagrant@server ~]$ sudo -i
+]0;root@server:~[root@server ~]# zpool create storage mirror sdb sdc
+]0;root@server:~[root@server ~]# zpool list
+NAME      SIZE  ALLOC   FREE  CKPOINT  EXPANDSZ   FRAG    CAP  DEDUP    HEALTH  ALTROOT
+storage   960M  91.5K   960M        -         -     0%     0%  1.00x    ONLINE  -
+]0;root@server:~[root@server ~]# zfs create storage/data1
+]0;root@server:~[root@server ~]# zfs create storage/data1[K2
+]0;root@server:~[root@server ~]# zfs create storage/data2[K3
+]0;root@server:~[root@server ~]# zfs create storage/data3[K4
+]0;root@server:~[root@server ~]# zfs list
+NAME            USED  AVAIL     REFER  MOUNTPOINT
+storage         206K   832M       28K  /storage
+storage/data1    24K   832M       24K  /storage/data1
+storage/data2    24K   832M       24K  /storage/data2
+storage/data3    24K   832M       24K  /storage/data3
+storage/data4    24K   832M       24K  /storage/data4
+]0;root@server:~[root@server ~]# zfs get mounted
+NAME           PROPERTY  VALUE    SOURCE
+storage        mounted   yes      -
+storage/data1  mounted   yes      -
+storage/data2  mounted   yes      -
+storage/data3  mounted   yes      -
+storage/data4  mounted   yes      -
+]0;root@server:~[root@server ~]# wget -O War_and_Peace.txt http://www.airmeno.ru/images/pg2600.txt
+--2020-11-18 12:32:35--  http://www.airmeno.ru/images/pg2600.txt
+Resolving www.airmeno.ru (www.airmeno.ru)... 185.195.25.98
+Connecting to www.airmeno.ru (www.airmeno.ru)|185.195.25.98|:80... connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: https://www.airmeno.ru/images/pg2600.txt [following]
+--2020-11-18 12:32:35--  https://www.airmeno.ru/images/pg2600.txt
+Connecting to www.airmeno.ru (www.airmeno.ru)|185.195.25.98|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 3291647 (3.1M) [text/plain]
+Saving to: 'War_and_Peace.txt'
+
+War_and_Peace.txt              0%[                                            ]       0  --.-KB/s               War_and_Peace.txt             41%[=================>                          ]   1.31M  6.55MB/s               War_and_Peace.txt             83%[===================================>        ]   2.62M  6.53MB/s               War_and_Peace.txt            100%[===========================================>]   3.14M  6.56MB/s    in 0.5s    
+
+2020-11-18 12:32:36 (6.56 MB/s) - 'War_and_Peace.txt' saved [3291647/3291647]
+
+]0;root@server:~[root@server ~]# zfs set compression=off storage/data1
+]0;root@server:~[root@server ~]# zfs set compression=gzip-9 storage/data2
+]0;root@server:~[root@server ~]# zfs set compression=lzjb storage/data3
+]0;root@server:~[root@server ~]# zfs set compression=lz4 storage/data4
+]0;root@server:~[root@server ~]# zfs get compression,compressratio
+NAME           PROPERTY       VALUE     SOURCE
+storage        compression    off       default
+storage        compressratio  1.00x     -
+storage/data1  compression    off       local
+storage/data1  compressratio  1.00x     -
+storage/data2  compression    gzip-9    local
+storage/data2  compressratio  1.00x     -
+storage/data3  compression    lzjb      local
+storage/data3  compressratio  1.00x     -
+storage/data4  compression    lz4       local
+storage/data4  compressratio  1.00x     -
+]0;root@server:~[root@server ~]# cp War_and_Peace.txt /storage/data1
+]0;root@server:~[root@server ~]# cp War_and_Peace.txt /storage/data1[K2
+]0;root@server:~[root@server ~]# cp War_and_Peace.txt /storage/data2[K3
+]0;root@server:~[root@server ~]# cp War_and_Peace.txt /storage/data3[K4
+]0;root@server:~[root@server ~]# zfs get compression,compressratio
+NAME           PROPERTY       VALUE     SOURCE
+storage        compression    off       default
+storage        compressratio  1.47x     -
+storage/data1  compression    off       local
+storage/data1  compressratio  1.00x     -
+storage/data2  compression    gzip-9    local
+storage/data2  compressratio  2.70x     -
+storage/data3  compression    lzjb      local
+storage/data3  compressratio  1.37x     -
+storage/data4  compression    lz4       local
+storage/data4  compressratio  1.64x     -
+]0;root@server:~[root@server ~]# wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1KRBNW33QWqbvbVHa3hLJiivOAt60yukkg' -O zfs_task1.tar.gz
+--2020-11-18 12:36:02--  https://docs.google.com/uc?export=download&id=1KRBNW33QWqbvbVHa3hLJivOAt60yukkg
+Resolving docs.google.com (docs.google.com)... 64.233.161.194
+Connecting to docs.google.com (docs.google.com)|64.233.161.194|:443... connected.
+HTTP request sent, awaiting response... 302 Moved Temporarily
+Location: https://doc-0c-bo-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/48t3b0iumia8mgelltco6fl165hv0op1/1605702900000/16189157874053420687/*/1KRBNW33QWqbvbVHa3hLJivOAt60yukkg?e=download [following]
+Warning: wildcards not supported in HTTP.
+--2020-11-18 12:36:10--  https://doc-0c-bo-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/48t3b0iumia8mgelltco6fl165hv0op1/1605702900000/16189157874053420687/*/1KRBNW33QWqbvbVHa3hLJivOAt60yukkg?e=download
+Resolving doc-0c-bo-docs.googleusercontent.com (doc-0c-bo-docs.googleusercontent.com)... 173.194.222.132
+Connecting to doc-0c-bo-docs.googleusercontent.com (doc-0c-bo-docs.googleusercontent.com)|173.194.222.132|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/x-gzip]
+Saving to: 'zfs_task1.tar.gz'
+
+zfs_task1.tar.gz                 [<=>                                         ]       0  --.-KB/s               zfs_task1.tar.gz                 [ <=>                                        ] 688.58K  3.36MB/s               zfs_task1.tar.gz                 [  <=>                                       ]   2.41M  6.01MB/s               zfs_task1.tar.gz                 [   <=>                                      ]   3.72M  6.19MB/s               zfs_task1.tar.gz                 [    <=>                                     ]   5.04M  6.27MB/s               zfs_task1.tar.gz                 [     <=>                                    ]   6.35M  6.32MB/s               zfs_task1.tar.gz                 [      <=>                                   ]   6.94M  6.34MB/s    in 1.1s    
+
+2020-11-18 12:36:12 (6.34 MB/s) - 'zfs_task1.tar.gz' saved [7275140]
+
+]0;root@server:~[root@server ~]# tar xvf zfs_task1.tar.gz
+zpoolexport/
+zpoolexport/filea
+zpoolexport/fileb
+]0;root@server:~[root@server ~]# zpool import -d ${PWD}/zpoolexport/
+   pool: otus
+     id: 6554193320433390805
+  state: ONLINE
+ action: The pool can be imported using its name or numeric identifier.
+ config:
+
+	otus                         ONLINE
+	  mirror-0                   ONLINE
+	    /root/zpoolexport/filea  ONLINE
+	    /root/zpoolexport/fileb  ONLINE
+]0;root@server:~[root@server ~]# zpool import -d ${PWD}/zpoolexport/ otus
+]0;root@server:~[root@server ~]# zpool list
+NAME      SIZE  ALLOC   FREE  CKPOINT  EXPANDSZ   FRAG    CAP  DEDUP    HEALTH  ALTROOT
+otus      480M  2.18M   478M        -         -     0%     0%  1.00x    ONLINE  -
+storage   960M  9.02M   951M        -         -     0%     0%  1.00x    ONLINE  -
+]0;root@server:~[root@server ~]# zpool status
+  pool: otus
+ state: ONLINE
+  scan: none requested
+config:
+
+	NAME                         STATE     READ WRITE CKSUM
+	otus                         ONLINE       0     0     0
+	  mirror-0                   ONLINE       0     0     0
+	    /root/zpoolexport/filea  ONLINE       0     0     0
+	    /root/zpoolexport/fileb  ONLINE       0     0     0
+
+errors: No known data errors
+
+  pool: storage
+ state: ONLINE
+  scan: none requested
+config:
+
+	NAME        STATE     READ WRITE CKSUM
+	storage     ONLINE       0     0     0
+	  mirror-0  ONLINE       0     0     0
+	    sdb     ONLINE       0     0     0
+	    sdc     ONLINE       0     0     0
+
+errors: No known data errors
+]0;root@server:~[root@server ~]# zfs list
+NAME             USED  AVAIL     REFER  MOUNTPOINT
+otus            2.04M   350M       24K  /otus
+otus/hometask2  1.88M   350M     1.88M  /otus/hometask2
+storage            9M   823M       28K  /storage
+storage/data1   3.28M   823M     3.28M  /storage/data1
+storage/data2   1.22M   823M     1.22M  /storage/data2
+storage/data3   2.38M   823M     2.38M  /storage/data3
+storage/data4   2.00M   823M     2.00M  /storage/data4
+]0;root@server:~[root@server ~]# zfs get all
+NAME            PROPERTY              VALUE                  SOURCE
+otus            type                  filesystem             -
+otus            creation              Fri May 15  4:00 2020  -
+otus            used                  2.04M                  -
+otus            available             350M                   -
+otus            referenced            24K                    -
+otus            compressratio         1.00x                  -
+otus            mounted               yes                    -
+otus            quota                 none                   default
+otus            reservation           none                   default
+otus            recordsize            128K                   local
+otus            mountpoint            /otus                  default
+otus            sharenfs              off                    default
+otus            checksum              sha256                 local
+otus            compression           zle                    local
+otus            atime                 on                     default
+otus            devices               on                     default
+otus            exec                  on                     default
+otus            setuid                on                     default
+otus            readonly              off                    default
+otus            zoned                 off                    default
+otus            snapdir               hidden                 default
+otus            aclinherit            restricted             default
+otus            createtxg             1                      -
+otus            canmount              on                     default
+otus            xattr                 on                     default
+otus            copies                1                      default
+otus            version               5                      -
+otus            utf8only              off                    -
+otus            normalization         none                   -
+otus            casesensitivity       sensitive              -
+otus            vscan                 off                    default
+otus            nbmand                off                    default
+otus            sharesmb              off                    default
+otus            refquota              none                   default
+otus            refreservation        none                   default
+otus            guid                  14592242904030363272   -
+otus            primarycache          all                    default
+otus            secondarycache        all                    default
+otus            usedbysnapshots       0B                     -
+otus            usedbydataset         24K                    -
+otus            usedbychildren        2.01M                  -
+otus            usedbyrefreservation  0B                     -
+otus            logbias               latency                default
+otus            objsetid              54                     -
+otus            dedup                 off                    default
+otus            mlslabel              none                   default
+otus            sync                  standard               default
+otus            dnodesize             legacy                 default
+otus            refcompressratio      1.00x                  -
+otus            written               24K                    -
+otus            logicalused           1020K                  -
+otus            logicalreferenced     12K                    -
+otus            volmode               default                default
+otus            filesystem_limit      none                   default
+otus            snapshot_limit        none                   default
+otus            filesystem_count      none                   default
+otus            snapshot_count        none                   default
+otus            snapdev               hidden                 default
+otus            acltype               off                    default
+otus            context               none                   default
+otus            fscontext             none                   default
+otus            defcontext            none                   default
+otus            rootcontext           none                   default
+otus            relatime              off                    default
+otus            redundant_metadata    all                    default
+otus            overlay               off                    default
+otus            encryption            off                    default
+otus            keylocation           none                   default
+otus            keyformat             none                   default
+otus            pbkdf2iters           0                      default
+otus            special_small_blocks  0                      default
+otus/hometask2  type                  filesystem             -
+otus/hometask2  creation              Fri May 15  4:18 2020  -
+otus/hometask2  used                  1.88M                  -
+otus/hometask2  available             350M                   -
+otus/hometask2  referenced            1.88M                  -
+otus/hometask2  compressratio         1.00x                  -
+otus/hometask2  mounted               yes                    -
+otus/hometask2  quota                 none                   default
+otus/hometask2  reservation           none                   default
+otus/hometask2  recordsize            128K                   inherited from otus
+otus/hometask2  mountpoint            /otus/hometask2        default
+otus/hometask2  sharenfs              off                    default
+otus/hometask2  checksum              sha256                 inherited from otus
+otus/hometask2  compression           zle                    inherited from otus
+otus/hometask2  atime                 on                     default
+otus/hometask2  devices               on                     default
+otus/hometask2  exec                  on                     default
+otus/hometask2  setuid                on                     default
+otus/hometask2  readonly              off                    default
+otus/hometask2  zoned                 off                    default
+otus/hometask2  snapdir               hidden                 default
+otus/hometask2  aclinherit            restricted             default
+otus/hometask2  createtxg             216                    -
+otus/hometask2  canmount              on                     default
+otus/hometask2  xattr                 on                     default
+otus/hometask2  copies                1                      default
+otus/hometask2  version               5                      -
+otus/hometask2  utf8only              off                    -
+otus/hometask2  normalization         none                   -
+otus/hometask2  casesensitivity       sensitive              -
+otus/hometask2  vscan                 off                    default
+otus/hometask2  nbmand                off                    default
+otus/hometask2  sharesmb              off                    default
+otus/hometask2  refquota              none                   default
+otus/hometask2  refreservation        none                   default
+otus/hometask2  guid                  3809416093691379248    -
+otus/hometask2  primarycache          all                    default
+otus/hometask2  secondarycache        all                    default
+otus/hometask2  usedbysnapshots       0B                     -
+otus/hometask2  usedbydataset         1.88M                  -
+otus/hometask2  usedbychildren        0B                     -
+otus/hometask2  usedbyrefreservation  0B                     -
+otus/hometask2  logbias               latency                default
+otus/hometask2  objsetid              81                     -
+otus/hometask2  dedup                 off                    default
+otus/hometask2  mlslabel              none                   default
+otus/hometask2  sync                  standard               default
+otus/hometask2  dnodesize             legacy                 default
+otus/hometask2  refcompressratio      1.00x                  -
+otus/hometask2  written               1.88M                  -
+otus/hometask2  logicalused           963K                   -
+otus/hometask2  logicalreferenced     963K                   -
+otus/hometask2  volmode               default                default
+otus/hometask2  filesystem_limit      none                   default
+otus/hometask2  snapshot_limit        none                   default
+otus/hometask2  filesystem_count      none                   default
+otus/hometask2  snapshot_count        none                   default
+otus/hometask2  snapdev               hidden                 default
+otus/hometask2  acltype               off                    default
+otus/hometask2  context               none                   default
+otus/hometask2  fscontext             none                   default
+otus/hometask2  defcontext            none                   default
+otus/hometask2  rootcontext           none                   default
+otus/hometask2  relatime              off                    default
+otus/hometask2  redundant_metadata    all                    default
+otus/hometask2  overlay               off                    default
+otus/hometask2  encryption            off                    default
+otus/hometask2  keylocation           none                   default
+otus/hometask2  keyformat             none                   default
+otus/hometask2  pbkdf2iters           0                      default
+otus/hometask2  special_small_blocks  0                      default
+storage         type                  filesystem             -
+storage         creation              Wed Nov 18 12:31 2020  -
+storage         used                  9M                     -
+storage         available             823M                   -
+storage         referenced            28K                    -
+storage         compressratio         1.47x                  -
+storage         mounted               yes                    -
+storage         quota                 none                   default
+storage         reservation           none                   default
+storage         recordsize            128K                   default
+storage         mountpoint            /storage               default
+storage         sharenfs              off                    default
+storage         checksum              on                     default
+storage         compression           off                    default
+storage         atime                 on                     default
+storage         devices               on                     default
+storage         exec                  on                     default
+storage         setuid                on                     default
+storage         readonly              off                    default
+storage         zoned                 off                    default
+storage         snapdir               hidden                 default
+storage         aclinherit            restricted             default
+storage         createtxg             1                      -
+storage         canmount              on                     default
+storage         xattr                 on                     default
+storage         copies                1                      default
+storage         version               5                      -
+storage         utf8only              off                    -
+storage         normalization         none                   -
+storage         casesensitivity       sensitive              -
+storage         vscan                 off                    default
+storage         nbmand                off                    default
+storage         sharesmb              off                    default
+storage         refquota              none                   default
+storage         refreservation        none                   default
+storage         guid                  13303006243242164904   -
+storage         primarycache          all                    default
+storage         secondarycache        all                    default
+storage         usedbysnapshots       0B                     -
+storage         usedbydataset         28K                    -
+storage         usedbychildren        8.97M                  -
+storage         usedbyrefreservation  0B                     -
+storage         logbias               latency                default
+storage         objsetid              54                     -
+storage         dedup                 off                    default
+storage         mlslabel              none                   default
+storage         sync                  standard               default
+storage         dnodesize             legacy                 default
+storage         refcompressratio      1.00x                  -
+storage         written               28K                    -
+storage         logicalused           13.1M                  -
+storage         logicalreferenced     15K                    -
+storage         volmode               default                default
+storage         filesystem_limit      none                   default
+storage         snapshot_limit        none                   default
+storage         filesystem_count      none                   default
+storage         snapshot_count        none                   default
+storage         snapdev               hidden                 default
+storage         acltype               off                    default
+storage         context               none                   default
+storage         fscontext             none                   default
+storage         defcontext            none                   default
+storage         rootcontext           none                   default
+storage         relatime              off                    default
+storage         redundant_metadata    all                    default
+storage         overlay               off                    default
+storage         encryption            off                    default
+storage         keylocation           none                   default
+storage         keyformat             none                   default
+storage         pbkdf2iters           0                      default
+storage         special_small_blocks  0                      default
+storage/data1   type                  filesystem             -
+storage/data1   creation              Wed Nov 18 12:31 2020  -
+storage/data1   used                  3.28M                  -
+storage/data1   available             823M                   -
+storage/data1   referenced            3.28M                  -
+storage/data1   compressratio         1.00x                  -
+storage/data1   mounted               yes                    -
+storage/data1   quota                 none                   default
+storage/data1   reservation           none                   default
+storage/data1   recordsize            128K                   default
+storage/data1   mountpoint            /storage/data1         default
+storage/data1   sharenfs              off                    default
+storage/data1   checksum              on                     default
+storage/data1   compression           off                    local
+storage/data1   atime                 on                     default
+storage/data1   devices               on                     default
+storage/data1   exec                  on                     default
+storage/data1   setuid                on                     default
+storage/data1   readonly              off                    default
+storage/data1   zoned                 off                    default
+storage/data1   snapdir               hidden                 default
+storage/data1   aclinherit            restricted             default
+storage/data1   createtxg             10                     -
+storage/data1   canmount              on                     default
+storage/data1   xattr                 on                     default
+storage/data1   copies                1                      default
+storage/data1   version               5                      -
+storage/data1   utf8only              off                    -
+storage/data1   normalization         none                   -
+storage/data1   casesensitivity       sensitive              -
+storage/data1   vscan                 off                    default
+storage/data1   nbmand                off                    default
+storage/data1   sharesmb              off                    default
+storage/data1   refquota              none                   default
+storage/data1   refreservation        none                   default
+storage/data1   guid                  8688272873332993837    -
+storage/data1   primarycache          all                    default
+storage/data1   secondarycache        all                    default
+storage/data1   usedbysnapshots       0B                     -
+storage/data1   usedbydataset         3.28M                  -
+storage/data1   usedbychildren        0B                     -
+storage/data1   usedbyrefreservation  0B                     -
+storage/data1   logbias               latency                default
+storage/data1   objsetid              81                     -
+storage/data1   dedup                 off                    default
+storage/data1   mlslabel              none                   default
+storage/data1   sync                  standard               default
+storage/data1   dnodesize             legacy                 default
+storage/data1   refcompressratio      1.00x                  -
+storage/data1   written               3.28M                  -
+storage/data1   logicalused           3.26M                  -
+storage/data1   logicalreferenced     3.26M                  -
+storage/data1   volmode               default                default
+storage/data1   filesystem_limit      none                   default
+storage/data1   snapshot_limit        none                   default
+storage/data1   filesystem_count      none                   default
+storage/data1   snapshot_count        none                   default
+storage/data1   snapdev               hidden                 default
+storage/data1   acltype               off                    default
+storage/data1   context               none                   default
+storage/data1   fscontext             none                   default
+storage/data1   defcontext            none                   default
+storage/data1   rootcontext           none                   default
+storage/data1   relatime              off                    default
+storage/data1   redundant_metadata    all                    default
+storage/data1   overlay               off                    default
+storage/data1   encryption            off                    default
+storage/data1   keylocation           none                   default
+storage/data1   keyformat             none                   default
+storage/data1   pbkdf2iters           0                      default
+storage/data1   special_small_blocks  0                      default
+storage/data2   type                  filesystem             -
+storage/data2   creation              Wed Nov 18 12:31 2020  -
+storage/data2   used                  1.22M                  -
+storage/data2   available             823M                   -
+storage/data2   referenced            1.22M                  -
+storage/data2   compressratio         2.70x                  -
+storage/data2   mounted               yes                    -
+storage/data2   quota                 none                   default
+storage/data2   reservation           none                   default
+storage/data2   recordsize            128K                   default
+storage/data2   mountpoint            /storage/data2         default
+storage/data2   sharenfs              off                    default
+storage/data2   checksum              on                     default
+storage/data2   compression           gzip-9                 local
+storage/data2   atime                 on                     default
+storage/data2   devices               on                     default
+storage/data2   exec                  on                     default
+storage/data2   setuid                on                     default
+storage/data2   readonly              off                    default
+storage/data2   zoned                 off                    default
+storage/data2   snapdir               hidden                 default
+storage/data2   aclinherit            restricted             default
+storage/data2   createtxg             11                     -
+storage/data2   canmount              on                     default
+storage/data2   xattr                 on                     default
+storage/data2   copies                1                      default
+storage/data2   version               5                      -
+storage/data2   utf8only              off                    -
+storage/data2   normalization         none                   -
+storage/data2   casesensitivity       sensitive              -
+storage/data2   vscan                 off                    default
+storage/data2   nbmand                off                    default
+storage/data2   sharesmb              off                    default
+storage/data2   refquota              none                   default
+storage/data2   refreservation        none                   default
+storage/data2   guid                  9373526583787485751    -
+storage/data2   primarycache          all                    default
+storage/data2   secondarycache        all                    default
+storage/data2   usedbysnapshots       0B                     -
+storage/data2   usedbydataset         1.22M                  -
+storage/data2   usedbychildren        0B                     -
+storage/data2   usedbyrefreservation  0B                     -
+storage/data2   logbias               latency                default
+storage/data2   objsetid              88                     -
+storage/data2   dedup                 off                    default
+storage/data2   mlslabel              none                   default
+storage/data2   sync                  standard               default
+storage/data2   dnodesize             legacy                 default
+storage/data2   refcompressratio      2.70x                  -
+storage/data2   written               1.22M                  -
+storage/data2   logicalused           3.26M                  -
+storage/data2   logicalreferenced     3.26M                  -
+storage/data2   volmode               default                default
+storage/data2   filesystem_limit      none                   default
+storage/data2   snapshot_limit        none                   default
+storage/data2   filesystem_count      none                   default
+storage/data2   snapshot_count        none                   default
+storage/data2   snapdev               hidden                 default
+storage/data2   acltype               off                    default
+storage/data2   context               none                   default
+storage/data2   fscontext             none                   default
+storage/data2   defcontext            none                   default
+storage/data2   rootcontext           none                   default
+storage/data2   relatime              off                    default
+storage/data2   redundant_metadata    all                    default
+storage/data2   overlay               off                    default
+storage/data2   encryption            off                    default
+storage/data2   keylocation           none                   default
+storage/data2   keyformat             none                   default
+storage/data2   pbkdf2iters           0                      default
+storage/data2   special_small_blocks  0                      default
+storage/data3   type                  filesystem             -
+storage/data3   creation              Wed Nov 18 12:31 2020  -
+storage/data3   used                  2.38M                  -
+storage/data3   available             823M                   -
+storage/data3   referenced            2.38M                  -
+storage/data3   compressratio         1.37x                  -
+storage/data3   mounted               yes                    -
+storage/data3   quota                 none                   default
+storage/data3   reservation           none                   default
+storage/data3   recordsize            128K                   default
+storage/data3   mountpoint            /storage/data3         default
+storage/data3   sharenfs              off                    default
+storage/data3   checksum              on                     default
+storage/data3   compression           lzjb                   local
+storage/data3   atime                 on                     default
+storage/data3   devices               on                     default
+storage/data3   exec                  on                     default
+storage/data3   setuid                on                     default
+storage/data3   readonly              off                    default
+storage/data3   zoned                 off                    default
+storage/data3   snapdir               hidden                 default
+storage/data3   aclinherit            restricted             default
+storage/data3   createtxg             12                     -
+storage/data3   canmount              on                     default
+storage/data3   xattr                 on                     default
+storage/data3   copies                1                      default
+storage/data3   version               5                      -
+storage/data3   utf8only              off                    -
+storage/data3   normalization         none                   -
+storage/data3   casesensitivity       sensitive              -
+storage/data3   vscan                 off                    default
+storage/data3   nbmand                off                    default
+storage/data3   sharesmb              off                    default
+storage/data3   refquota              none                   default
+storage/data3   refreservation        none                   default
+storage/data3   guid                  1689241747263949577    -
+storage/data3   primarycache          all                    default
+storage/data3   secondarycache        all                    default
+storage/data3   usedbysnapshots       0B                     -
+storage/data3   usedbydataset         2.38M                  -
+storage/data3   usedbychildren        0B                     -
+storage/data3   usedbyrefreservation  0B                     -
+storage/data3   logbias               latency                default
+storage/data3   objsetid              94                     -
+storage/data3   dedup                 off                    default
+storage/data3   mlslabel              none                   default
+storage/data3   sync                  standard               default
+storage/data3   dnodesize             legacy                 default
+storage/data3   refcompressratio      1.37x                  -
+storage/data3   written               2.38M                  -
+storage/data3   logicalused           3.26M                  -
+storage/data3   logicalreferenced     3.26M                  -
+storage/data3   volmode               default                default
+storage/data3   filesystem_limit      none                   default
+storage/data3   snapshot_limit        none                   default
+storage/data3   filesystem_count      none                   default
+storage/data3   snapshot_count        none                   default
+storage/data3   snapdev               hidden                 default
+storage/data3   acltype               off                    default
+storage/data3   context               none                   default
+storage/data3   fscontext             none                   default
+storage/data3   defcontext            none                   default
+storage/data3   rootcontext           none                   default
+storage/data3   relatime              off                    default
+storage/data3   redundant_metadata    all                    default
+storage/data3   overlay               off                    default
+storage/data3   encryption            off                    default
+storage/data3   keylocation           none                   default
+storage/data3   keyformat             none                   default
+storage/data3   pbkdf2iters           0                      default
+storage/data3   special_small_blocks  0                      default
+storage/data4   type                  filesystem             -
+storage/data4   creation              Wed Nov 18 12:31 2020  -
+storage/data4   used                  2.00M                  -
+storage/data4   available             823M                   -
+storage/data4   referenced            2.00M                  -
+storage/data4   compressratio         1.64x                  -
+storage/data4   mounted               yes                    -
+storage/data4   quota                 none                   default
+storage/data4   reservation           none                   default
+storage/data4   recordsize            128K                   default
+storage/data4   mountpoint            /storage/data4         default
+storage/data4   sharenfs              off                    default
+storage/data4   checksum              on                     default
+storage/data4   compression           lz4                    local
+storage/data4   atime                 on                     default
+storage/data4   devices               on                     default
+storage/data4   exec                  on                     default
+storage/data4   setuid                on                     default
+storage/data4   readonly              off                    default
+storage/data4   zoned                 off                    default
+storage/data4   snapdir               hidden                 default
+storage/data4   aclinherit            restricted             default
+storage/data4   createtxg             13                     -
+storage/data4   canmount              on                     default
+storage/data4   xattr                 on                     default
+storage/data4   copies                1                      default
+storage/data4   version               5                      -
+storage/data4   utf8only              off                    -
+storage/data4   normalization         none                   -
+storage/data4   casesensitivity       sensitive              -
+storage/data4   vscan                 off                    default
+storage/data4   nbmand                off                    default
+storage/data4   sharesmb              off                    default
+storage/data4   refquota              none                   default
+storage/data4   refreservation        none                   default
+storage/data4   guid                  4048565750912518950    -
+storage/data4   primarycache          all                    default
+storage/data4   secondarycache        all                    default
+storage/data4   usedbysnapshots       0B                     -
+storage/data4   usedbydataset         2.00M                  -
+storage/data4   usedbychildren        0B                     -
+storage/data4   usedbyrefreservation  0B                     -
+storage/data4   logbias               latency                default
+storage/data4   objsetid              100                    -
+storage/data4   dedup                 off                    default
+storage/data4   mlslabel              none                   default
+storage/data4   sync                  standard               default
+storage/data4   dnodesize             legacy                 default
+storage/data4   refcompressratio      1.64x                  -
+storage/data4   written               2.00M                  -
+storage/data4   logicalused           3.26M                  -
+storage/data4   logicalreferenced     3.26M                  -
+storage/data4   volmode               default                default
+storage/data4   filesystem_limit      none                   default
+storage/data4   snapshot_limit        none                   default
+storage/data4   filesystem_count      none                   default
+storage/data4   snapshot_count        none                   default
+storage/data4   snapdev               hidden                 default
+storage/data4   acltype               off                    default
+storage/data4   context               none                   default
+storage/data4   fscontext             none                   default
+storage/data4   defcontext            none                   default
+storage/data4   rootcontext           none                   default
+storage/data4   relatime              off                    default
+storage/data4   redundant_metadata    all                    default
+storage/data4   overlay               off                    default
+storage/data4   encryption            off                    default
+storage/data4   keylocation           none                   default
+storage/data4   keyformat             none                   default
+storage/data4   pbkdf2iters           0                      default
+storage/data4   special_small_blocks  0                      default
+]0;root@server:~[root@server ~]# zfs get recordsize
+NAME            PROPERTY    VALUE    SOURCE
+otus            recordsize  128K     local
+otus/hometask2  recordsize  128K     inherited from otus
+storage         recordsize  128K     default
+storage/data1   recordsize  128K     default
+storage/data2   recordsize  128K     default
+storage/data3   recordsize  128K     default
+storage/data4   recordsize  128K     default
+]0;root@server:~[root@server ~]# zfs get compression
+NAME            PROPERTY     VALUE     SOURCE
+otus            compression  zle       local
+otus/hometask2  compression  zle       inherited from otus
+storage         compression  off       default
+storage/data1   compression  off       local
+storage/data2   compression  gzip-9    local
+storage/data3   compression  lzjb      local
+storage/data4   compression  lz4       local
+]0;root@server:~[root@server ~]# zfs get checksum 
+NAME            PROPERTY  VALUE      SOURCE
+otus            checksum  sha256     local
+otus/hometask2  checksum  sha256     inherited from otus
+storage         checksum  on         default
+storage/data1   checksum  on         default
+storage/data2   checksum  on         default
+storage/data3   checksum  on         default
+storage/data4   checksum  on         default
+]0;root@server:~[root@server ~]# wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1gH8gCL9y7Nd5Ti3IRmplZZPF1XjzxeRAG' -O otus_task2.file
+--2020-11-18 12:38:45--  https://docs.google.com/uc?export=download&id=1gH8gCL9y7Nd5Ti3IRmplZPF1XjzxeRAG
+Resolving docs.google.com (docs.google.com)... 108.177.14.101, 108.177.14.113, 108.177.14.138, ...
+Connecting to docs.google.com (docs.google.com)|108.177.14.101|:443... connected.
+HTTP request sent, awaiting response... 302 Moved Temporarily
+Location: https://doc-00-bo-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/0jksud37jna00t7omgguku7kdd8ol3fi/1605703125000/16189157874053420687/*/1gH8gCL9y7Nd5Ti3IRmplZPF1XjzxeRAG?e=download [following]
+Warning: wildcards not supported in HTTP.
+--2020-11-18 12:38:46--  https://doc-00-bo-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/0jksud37jna00t7omgguku7kdd8ol3fi/1605703125000/16189157874053420687/*/1gH8gCL9y7Nd5Ti3IRmplZPF1XjzxeRAG?e=download
+Resolving doc-00-bo-docs.googleusercontent.com (doc-00-bo-docs.googleusercontent.com)... 173.194.222.132
+Connecting to doc-00-bo-docs.googleusercontent.com (doc-00-bo-docs.googleusercontent.com)|173.194.222.132|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/octet-stream]
+Saving to: 'otus_task2.file'
+
+otus_task2.file                  [<=>                                         ]       0  --.-KB/s               otus_task2.file                  [ <=>                                        ]   1.04M  5.20MB/s               otus_task2.file                  [  <=>                                       ]   2.36M  5.90MB/s               otus_task2.file                  [   <=>                                      ]   3.69M  6.14MB/s               otus_task2.file                  [    <=>                                     ]   5.00M  6.21MB/s               otus_task2.file                  [     <=>                                    ]   5.18M  6.25MB/s    in 0.8s    
+
+2020-11-18 12:38:47 (6.25 MB/s) - 'otus_task2.file' saved [5432736]
+
+]0;root@server:~[root@server ~]# zfs receive storage/data < otus_task2.file
+]0;root@server:~[root@server ~]# zfs list -t snapshot
+NAME                 USED  AVAIL     REFER  MOUNTPOINT
+storage/data@task2     0B      -     3.69M  -
+]0;root@server:~[root@server ~]# zfs rollback storage/data@task2
+]0;root@server:~[root@server ~]# ls /storage/data
+10M.file   Moby_Dick.txt      [0m[38;5;9mcinderella.tar[0m    homework4.txt  world.sql
+Limbo.txt  War_and_Peace.txt  for_examaple.txt  [38;5;33mtask1[0m
+]0;root@server:~[root@server ~]# cat /storage/data/task1/file_mess/secret_message
+https://github.com/sindresorhus/awesome
+]0;root@server:~[root@server ~]# exit
+logout
+]0;vagrant@server:~[vagrant@server ~]$ exit
+logout
+Connection to 127.0.0.1 closed.
+]0;meno@meno-virtual-machine: ~/Desktop/otus/lesson8[01;32mmeno@meno-virtual-machine[00m:[01;34m~/Desktop/otus/lesson8[00m$ exit
+exit
+
+Script done on 2020-11-18 15:40:00+03:00 [COMMAND_EXIT_CODE="0"]

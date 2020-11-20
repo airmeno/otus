@@ -58,7 +58,7 @@ wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1KRBN
 tar xvf zfs_task1.tar.gz
 ```
 Импортируем с настройками
-````
+```
 zpool import -d ${PWD}/zpoolexport/
 zpool import -d ${PWD}/zpoolexport/ otus
 ```

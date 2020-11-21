@@ -8,7 +8,7 @@
 
 В строке linux16 в конце добавить init=/bin/sh. Ctrl-x выйдет из редактирования параметров и продолжит загрузку.
 
-![Image 9](https://github.com/airmeno/otus/tree/main/lesson5/images/1.jpg)
+![Image 1](https://github.com/airmeno/otus/blob/main/lesson5/images/1.jpg)
 
 файловая система root примонтируется в режиме только чтение. Чтобы изменить на чтение/запись:
 ```
@@ -19,11 +19,11 @@
 # mount | grep root
 # ls /
 ```
-![Image 9](https://github.com/airmeno/otus/tree/main/lesson5/images/2.jpg)
+![Image 2](https://github.com/airmeno/otus/blob/main/lesson5/images/2.jpg)
 
 И создадим файл в любой директории 
 
-![Image 9](https://github.com/airmeno/otus/tree/main/lesson5/images/3.jpg)
+![Image 3](https://github.com/airmeno/otus/blob/main/lesson5/images/3.jpg)
 
 ##### Способ 2. rd.break + смена пароля пользователя 
 
@@ -31,11 +31,11 @@
 
 Попадаем в emergency mode. 
 
-![Image 9](https://github.com/airmeno/otus/tree/main/lesson5/images/4.jpg)
+![Image 4](https://github.com/airmeno/otus/blob/main/lesson5/images/4.jpg)
 
 Файловая система root примонтируется в режиме только чтение, но в данном случае мы находимся не в root. 
 
-![Image 9](https://github.com/airmeno/otus/tree/main/lesson5/images/5.jpg)
+![Image 5](https://github.com/airmeno/otus/blob/main/lesson5/images/5.jpg)
 
 Чтобы примонтироваться к root, изменить на чтение/запись и сменить пароль root-а:
 ```
@@ -44,7 +44,7 @@
 # passwd root
 # touch /.autorelabel
 ```
-![Image 9](https://github.com/airmeno/otus/tree/main/lesson5/images/6.jpg)
+![Image 6](https://github.com/airmeno/otus/blob/main/lesson5/images/6.jpg)
 
 
 ##### Способ 3. rw init=/sysroot/bin/sh
@@ -52,7 +52,7 @@
 В строке linux16 заменим ro (Read Only) на (Read-Write) rw init=/sysroot/bin/sh. В предыдущем примере мы выдиели что наша root файловая система находилась в /sysroot, rw - сразу примонтирует ее с режиме чтение/запись. 
 Ctrl-x выйдет из редактирования параметров и продолжит загрузку.
 
-![Image 9](https://github.com/airmeno/otus/tree/main/lesson5/images/7.jpg)
+![Image 7](https://github.com/airmeno/otus/blob/main/lesson5/images/7.jpg)
 
 
 ### Установить систему с LVM, после чего переименовать VG
@@ -65,11 +65,11 @@ Ctrl-x выйдет из редактирования параметров и п
 
 > *Для информации^* не были отредактированы значения swap раздела 
 
-![Image 9](https://github.com/airmeno/otus/tree/main/lesson5/images/8.jpg)
+![Image 8](https://github.com/airmeno/otus/blob/main/lesson5/images/8.jpg)
 
 
 ##### Добавить модуль в initrd
 
 см файл scriptfile3
 
-![Image 9](https://github.com/airmeno/otus/tree/main/lesson5/images/9.jpg)
+![Image 9](https://github.com/airmeno/otus/blob/main/lesson5/images/9.jpg)

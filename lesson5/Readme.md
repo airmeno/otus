@@ -57,10 +57,10 @@ Ctrl-x выйдет из редактирования параметров и п
 
 ## Установить систему с LVM, после чего переименовать VG
 
-см файл [scriptfile!](https://github.com/airmeno/otus/blob/main/lesson5/typescript)
+см файл [scriptfile](https://github.com/airmeno/otus/blob/main/lesson5/typescript)
 
 > ###### Дополнительно:
-> В начальном конфигурировании была допущена ошибка в редактировании файлой /etc/fstab.
+> В начальном конфигурировании была допущена ошибка в редактировании файла /etc/fstab.
 > 
 > Было произведено редактирование загрузки по третьему способу (rw init=/sysroot/bin/sh), отредактированы соответствующие файлы в режиме emergency mode и произведена нормальная загрузка. После, в нормальном режиме исправлены ошибки в /boot/grub2/grub.cfg и произведена перезагрузка.
 
@@ -71,6 +71,6 @@ Ctrl-x выйдет из редактирования параметров и п
 
 ## Добавить модуль в initrd
 
-см файл [scriptfile3!](https://github.com/airmeno/otus/blob/main/lesson5/typescript3)
+см файл [scriptfile3](https://github.com/airmeno/otus/blob/main/lesson5/typescript3)
 
 ![Image 9](https://github.com/airmeno/otus/blob/main/lesson5/images/9.jpg)

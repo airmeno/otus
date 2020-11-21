@@ -1,8 +1,8 @@
-# LESSON 5
+# LESSON 5 (Boot)
 
 ### Попасть в систему без пароля
 
-##### Способ 1 init=/bin/sh
+#### Способ 1 init=/bin/sh
 
 При загрузке системы войти в режим редактирования параметров загрузки [клавиша e]
 
@@ -25,7 +25,7 @@
 
 ![Image 3](https://github.com/airmeno/otus/blob/main/lesson5/images/3.jpg)
 
-##### Способ 2. rd.break + смена пароля пользователя 
+#### Способ 2. rd.break + смена пароля пользователя 
 
 В строке linux16 в конце добавить rd.break. Ctrl-x выйдет из редактирования параметров и продолжит загрузку.
 
@@ -47,9 +47,9 @@
 ![Image 6](https://github.com/airmeno/otus/blob/main/lesson5/images/6.jpg)
 
 
-##### Способ 3. rw init=/sysroot/bin/sh
+#### Способ 3. rw init=/sysroot/bin/sh
 
-В строке linux16 заменим ro (Read Only) на (Read-Write) rw init=/sysroot/bin/sh. В предыдущем примере мы выдиели что наша root файловая система находилась в /sysroot, rw - сразу примонтирует ее с режиме чтение/запись. 
+В строке linux16 заменим ro (Read Only) на (Read-Write) rw init=/sysroot/bin/sh. В предыдущем примере мы видели, что наша root файловая система находилась в /sysroot, rw - сразу примонтирует ее с режиме чтение/запись. 
 Ctrl-x выйдет из редактирования параметров и продолжит загрузку.
 
 ![Image 7](https://github.com/airmeno/otus/blob/main/lesson5/images/7.jpg)
@@ -57,19 +57,20 @@ Ctrl-x выйдет из редактирования параметров и п
 
 ### Установить систему с LVM, после чего переименовать VG
 
-см scriptfile
+см файл [scriptfile!](https://github.com/airmeno/otus/blob/main/lesson5/typescript)
 
 > ###### Дополнительно:
-> В начальном конфигурировании была допущена ошибка в редактировании файлой /etc/fstab 
-> Было произведено редактирование загрузки по третьему способу (rw init=/sysroot/bin/sh), отредактированы соответствующие файлы в режиме emergency mode и произведена нормальная загурзка. После исправлены ошибки в /boot/grub2/grub.cfg и произведена перезагрузка
+> В начальном конфигурировании была допущена ошибка в редактировании файлой /etc/fstab.
+> 
+> Было произведено редактирование загрузки по третьему способу (rw init=/sysroot/bin/sh), отредактированы соответствующие файлы в режиме emergency mode и произведена нормальная загрузка. После, в нормальном режиме исправлены ошибки в /boot/grub2/grub.cfg и произведена перезагрузка.
 
-> *Для информации^* не были отредактированы значения swap раздела 
+> *Для информации:* не были отредактированы значения swap раздела. 
 
 ![Image 8](https://github.com/airmeno/otus/blob/main/lesson5/images/8.jpg)
 
 
-##### Добавить модуль в initrd
+### Добавить модуль в initrd
 
-см файл scriptfile3
+см файл [scriptfile3!](https://github.com/airmeno/otus/blob/main/lesson5/typescript3)
 
 ![Image 9](https://github.com/airmeno/otus/blob/main/lesson5/images/9.jpg)

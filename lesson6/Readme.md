@@ -20,6 +20,7 @@ rpm -i nginx-1.18.0-2.el7.ngx.src.rpm
 ll
 ```
 ![img1](images/1.jpg)
+
 Добавим опцию SSL при сборке NGINX - в /root/rpmbuild/SPECS/nginx.spec в блоке %build добавим --with-openssl=/root/openssl-1.1.1h
 
 ```

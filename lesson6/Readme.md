@@ -19,7 +19,7 @@ tar -xvf latest.tar.gz
 rpm -i nginx-1.18.0-2.el7.ngx.src.rpm
 ll
 ```
-![img1](https://github.com/airmeno/otus/blob/main/lesson6/images/1.jpg)
+![img1](images/1.jpg)
 Добавим опцию SSL при сборке NGINX - в /root/rpmbuild/SPECS/nginx.spec в блоке %build добавим --with-openssl=/root/openssl-1.1.1h
 
 ```
@@ -40,7 +40,7 @@ rpmbuild -bb rpmbuild/SPECS/nginx.spec
 
 ll rpmbuild/RPMS/x86_64/
 ```
-![img2](https://github.com/airmeno/otus/blob/main/lesson6/images/2.jpg)
+![img2](images/2.jpg)
 
 Установим rpm пакет и запустим nginx:
 ```
@@ -54,7 +54,7 @@ systemctl status nginx
 ```
 curl localhost
 ```
-![img3](https://github.com/airmeno/otus/blob/main/lesson6/images/4.jpg)
+![img3](images/3.jpg)
 
 ### 2. Создаем свой репозитарий
 
@@ -65,6 +65,7 @@ mkdir /usr/share/nginx/html/repo
 Скопируем готовый NGINX+SSL rpm в папку репозитория. И туда же скачаем простой rpm пакет для установки с нашего репозитория:
 ```
 cp /root/rpmbuild/RPMS/x86_64/nginx-1.18.0-2.el7.ngx.x86_64.rpm /usr/share/nginx/html/repo/
+
 wget https://download-ib01.fedoraproject.org/pub/epel/testing/8/Everything/x86_64/Packages/c/cowsay-3.04-16.el8.noarch.rpm -O /usr/share/nginx/html/repo/cowsay-3.04-16.el8.noarch.rpm 
 ```
 Инициализируем репозиторий:

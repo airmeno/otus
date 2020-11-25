@@ -1,4 +1,4 @@
-# Lesson 6 (Make / RPM / YUM)
+# Lesson 6 (Make / RPM / YUM и чуть Docker)
 
 ### 1. Работа с RPM 
 
@@ -19,28 +19,28 @@ tar -xvf latest.tar.gz
 rpm -i nginx-1.18.0-2.el7.ngx.src.rpm
 ll
 ```
-![img1](https://github.com/airmeno/otus/blob/main/lesson6/images/1.jpg)
+![img1](/images/1.jpg)
 Добавим опцию SSL при сборке NGINX - в /root/rpmbuild/SPECS/nginx.spec в блоке %build добавим --with-openssl=/root/openssl-1.1.1h
 
+```
 %build
 ./configure %{BASE_CONFIGURE_ARGS} \
     --with-cc-opt="%{WITH_CC_OPT}" \
     --with-ld-opt="%{WITH_LD_OPT}" \
     --with-debug \
     --with-openssl=/root/openssl-1.1.1h
-
-Поставим все зависимости для сборки:
+```
+Установим все зависимости для сборки:
 ```
 yum-builddep rpmbuild/SPECS/nginx.spec
 ```
-
-и собираем совой пакет RPM:
+и собирем совой пакет RPM:
 ```
 rpmbuild -bb rpmbuild/SPECS/nginx.spec
 
 ll rpmbuild/RPMS/x86_64/
 ```
-![img2](https://github.com/airmeno/otus/blob/main/lesson6/images/2.jpg)
+![img2](/images/2.jpg)
 
 Установим rpm пакет и запустим nginx:
 ```
@@ -54,7 +54,7 @@ systemctl status nginx
 ```
 curl localhost
 ```
-![img3](https://github.com/airmeno/otus/blob/main/lesson6/images/3.jpg)
+![img3](/images/3.jpg)
 
 ### 2. Создаем свой репозитарий
 
@@ -73,18 +73,18 @@ createrepo /usr/share/nginx/html/repo/
 ```
 
 В /etc/nginx/conf.d/default.conf в секции location / добавим директиву autoindex on
-
+```
 location / {
 root /usr/share/nginx/html;
 index index.html index.htm;
 autoindex on;
 }
-
+```
 Проверка синтаксиса и перезапуск:
-
+```
 nginx -t && nginx -s reload
 curl -a http://repo.airmeno.ru/repo/
-
+```
 
 ### 3. Установка пакетов из нашего репозитория
 
@@ -99,7 +99,7 @@ enabled=1
 EOF
 ```
 
-Проверим, что наш репозиторий добавился и пакеты присутсвуют:
+Проверим, что наш репозиторий добавился и пакеты присутствуют:
 ```
 yum repolist enabled | grep airmeno
 yum list | grep airmeno
@@ -117,7 +117,7 @@ cowsay "Hello OTUS"
 ```
 yum info cowsay
 ```
-![img4](https://github.com/airmeno/otus/blob/main/lesson6/images/4.jpg)
+![img4](/images/4.jpg)
 
 Откроем порты для http 
 ```

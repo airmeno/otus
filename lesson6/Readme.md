@@ -19,7 +19,7 @@ tar -xvf latest.tar.gz
 rpm -i nginx-1.18.0-2.el7.ngx.src.rpm
 ll
 ```
-![img1](/images/1.jpg)
+![img1](https://github.com/airmeno/otus/blob/main/lesson6/images/1.jpg)
 Добавим опцию SSL при сборке NGINX - в /root/rpmbuild/SPECS/nginx.spec в блоке %build добавим --with-openssl=/root/openssl-1.1.1h
 
 %build
@@ -40,7 +40,7 @@ rpmbuild -bb rpmbuild/SPECS/nginx.spec
 
 ll rpmbuild/RPMS/x86_64/
 ```
-![img2](/images/2.jpg)
+![img2](https://github.com/airmeno/otus/blob/main/lesson6/images/2.jpg)
 
 Установим rpm пакет и запустим nginx:
 ```
@@ -54,7 +54,7 @@ systemctl status nginx
 ```
 curl localhost
 ```
-![img3](/images/3.jpg)
+![img3](https://github.com/airmeno/otus/blob/main/lesson6/images/3.jpg)
 
 ### 2. Создаем свой репозитарий
 
@@ -117,7 +117,7 @@ cowsay "Hello OTUS"
 ```
 yum info cowsay
 ```
-![img4](/images/4.jpg)
+![img4](https://github.com/airmeno/otus/blob/main/lesson6/images/4.jpg)
 
 Откроем порты для http 
 ```

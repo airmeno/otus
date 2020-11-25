@@ -91,7 +91,7 @@ curl -a http://repo.airmeno.ru/repo/
 Добавим репозиторий в систему: 
 ```
 cat >> /etc/yum.repos.d/airmeno.repo << EOF
-[otus]
+[airmeno]
 name=airmeno-repo
 baseurl=http://repo.airmeno.ru/repo
 gpgcheck=0

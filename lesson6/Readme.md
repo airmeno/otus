@@ -1,4 +1,4 @@
-# Lesson 6 (Make / RPM / YUM и чуть Docker)
+# Lesson 6 (Make / RPM / YUM)
 
 ### 1. Работа с RPM 
 

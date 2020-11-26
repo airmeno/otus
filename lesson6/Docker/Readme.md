@@ -1,4 +1,4 @@
-#Lesson 6 (Docker)
+# Lesson 6 (Docker)
 
 **Задача: собрать Docker образ, запускающий тоже самое приложение, которое упаковали в .rpm**
 
@@ -22,7 +22,7 @@ yum install docker-ce docker-ce-cli containerd.io
 docker run hello-world
 ```
 
-###Сборки контенера с установкой Nginx из нашего репозитория
+### Сборки контенера с установкой Nginx из нашего репозитория
 
 Запускаем сборку из Dockerfile
 ```
@@ -55,7 +55,10 @@ docker login
 docker push airmeno/mynginxssl
 ```
 
+
 > Образ на Docker Hub - [https://hub.docker.com/repository/docker/airmeno/mynginxssl](https://hub.docker.com/repository/docker/airmeno/mynginxssl)
+
+
 
 
 Для запуска нашего контенера на любом Docker:

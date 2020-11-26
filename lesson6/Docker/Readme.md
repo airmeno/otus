@@ -15,7 +15,8 @@ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce
 yum install docker-ce docker-ce-cli containerd.io
 ```
 Запускаем:
-```systemctl start docker
+```
+systemctl start docker
 ```
 Проверим Docker Engine запустив тестовый образ hello-world:
 ```

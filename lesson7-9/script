@@ -1,0 +1,107 @@
+#!/bin/bash
+
+#Vars
+#top_lines=10
+#mylogfile=myaccess.log
+
+## Functions
+filters_404(){
+grep "404"
+}
+
+filters_err(){
+awk '{print $9 " -- " $15}' \
+| grep [45]0[0-9] \
+| uniq -c 
+}
+
+request_ips(){
+awk '{print $1}'
+}
+
+request_method(){
+awk '{print $6 "<--->" $9}' \
+| cut -d'"' -f2
+}
+
+request_pages(){
+awk '{print $7}'
+}
+
+wordcount(){
+sort \
+| uniq -c
+}
+
+sort_desc(){
+sort -rn
+}
+
+request_pages(){
+awk '{print $7}'
+}
+
+return_top_ten(){
+head -$top_lines
+}
+
+## actions
+get_request_ips(){
+echo ""
+echo "Top $top_lines Request IP's:"
+echo "===================="
+
+cat $mylogfile \
+| request_ips \
+| wordcount \
+| sort_desc \
+| return_top_ten
+echo ""
+}
+
+get_request_methods(){
+echo "Top Request Methods (Return Code's):"
+echo "===================================="
+cat $mylogfile \
+| request_method \
+| wordcount \
+echo ""
+}
+
+get_request_pages_err(){
+echo "All Error Code Page Responses:"
+echo "==============================="
+cat $mylogfile \
+| filters_err \
+echo ""
+}
+
+get_request_pages_404(){
+echo "Top $top_lines: 404 Page Responses:"
+echo "==========================="
+grep '-' $mylogfile \
+| filters_404 \
+| request_pages \
+| wordcount \
+| sort_desc \
+| return_top_ten
+echo ""
+}
+
+get_request_pages(){
+echo "Top $top_lines Request Pages:"
+echo "====================="
+cat $mylogfile \
+| request_pages \
+| wordcount \
+| sort_desc \
+| return_top_ten
+echo ""
+}
+
+# executing
+get_request_ips >> messages.txt
+get_request_methods >> messages.txt
+get_request_pages >> messages.txt
+get_request_pages_err >> messages.txt
+get_request_pages_404 >> messages.txt

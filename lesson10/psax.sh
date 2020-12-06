@@ -25,9 +25,10 @@ stat=$(cat 2>/dev/null /proc/$pid/stat | awk '{print $3}')
 utime=$(cat 2>/dev/null /proc/$pid/stat | awk '{print $14}')
 stime=$(cat  2>/dev/null /proc/$pid/stat | awk '{print $15}')
 cmd=$(cat 2>/dev/null /proc/$pid/stat | awk '{print $2}')
+# вывод информации аргуметов запуска процесса
 cmd_arg=$(cat 2>/dev/null /proc/$pid/cmdline | awk '{print $0}')
 
-# Считаем процессорное время для столбка TIME = врямя работы + время сна / на интервалы процессора
+# Считаем процессорное время для столбка TIME
 ttime=$(((utime + stime) / clk_tck)) 
 ftime=$(secconverttime $ttime)
 

@@ -10,8 +10,6 @@ secconverttime() {
 # Значение процессорного такта в машинных часах (интевалы в сек). Нужно для расчета процессорного времени на каждый процесс.
 clk_tck=$(getconf CLK_TCK)
 
-
-
 # Формируем вывод (заголовок)
 echo "PID | TTY | STAT | TIME | COMMAND" | column -t  -s '|'
 
@@ -28,7 +26,6 @@ utime=$(cat 2>/dev/null /proc/$pid/stat | awk '{print $14}')
 stime=$(cat  2>/dev/null /proc/$pid/stat | awk '{print $15}')
 cmd=$(cat 2>/dev/null /proc/$pid/stat | awk '{print $2}')
 cmd_arg=$(cat 2>/dev/null /proc/$pid/cmdline | awk '{print $0}')
-
 
 # Считаем процессорное время для столбка TIME = врямя работы + время сна / на интервалы процессора
 ttime=$(((utime + stime) / clk_tck)) 

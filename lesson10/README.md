@@ -1,4 +1,4 @@
-# Lesson 10 (Proceses)
+# Lesson 10 (Processes)
 
 - Реализация ps ax через bash используя анализ /proc
 

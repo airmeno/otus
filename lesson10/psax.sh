@@ -11,7 +11,7 @@ secconverttime() {
 clk_tck=$(getconf CLK_TCK)
 
 # Формируем вывод (заголовок)
-echo "PID | TTY | STAT | TIME | COMMAND" | column -t  -s '|'
+echo "PID |  TTY |  STAT | TIME | COMMAND" | column -t  -s '|'
 
 # из /proc забираем все папки с числами в имени (это наши PIDы) и сортируем по возрастанию
 a=$(ls -l /proc | awk '{print $9}' | grep -s "^[0-9]*[0-9]$"| sort -n) 
@@ -38,7 +38,7 @@ ttime=$(((utime + stime) / clk_tck))
 ftime=$(secconverttime $ttime)
 
 # вывод результатов
-echo "$pid | $tty | $stat | $ftime | $cmd $cmd_arg" | column -t  -s '|'
+printf "%s\t%s\t%s\t%s\t%s\n" "$pid" "$tty" "$stat" "$ftime" "$cmd $cmd_arg" | column -t -s '|'
 
 done
 

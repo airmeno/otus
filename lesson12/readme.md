@@ -4,7 +4,7 @@
 #### 1. Написать сервис, который будет раз в 30 секунд мониторить лог на предмет наличия ключевого слова. Файл и слово должны задаваться в /etc/sysconfig
 
 **Решение:** 
-> в install.sh раздел - Task Timer
+> в [install.sh](install.sh) раздел - Task Timer
 
 * Создаем файлы [/etc/sysconfig/watchlog](scripts/watchlog), [/var/log/watchlog.log](scripts/watchlog.log) и [/opt/watchlog.sh](scripts/watchlog.sh) 
 
@@ -19,7 +19,7 @@
 #### 2. Из epel установить spawn-fcgi и переписать init-скрипт на unit-файл. Имя сервиса должно так же называться.
 
 **Решение:** 
-> в install.sh раздел - Task init to unit
+> в [install.sh](install.sh) раздел - Task init to unit
 
 Установим необходимые пакеты 
 
@@ -36,7 +36,7 @@ yum install epel-release -y && yum install spawn-fcgi php php-cli mod_fcgid http
 #### 3. Дополнить Unit-файл apache httpd возможностьб запустить несколько инстансов сервера с разными конфигами
 
 **Решение:** 
-> в install.sh раздел - Task two httpd
+> в [install.sh](install.sh) раздел - Task two httpd
 
 Для запуска нескольких экземпляров сервиса используем шаблон в конфигурации файла окружения. 
 Создадим [Unit-файл](scripts/httpd.service) и в качестве конфигурации укажем файл с параметром %I:

@@ -1,4 +1,4 @@
-LESSON 4
+LESSON 4 (NFS)
 
 Vagrantfile создает 2 ВМ 
 	- NFSS = NFS Server (192.168.50.10)

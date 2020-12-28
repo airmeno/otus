@@ -1,1 +1,3 @@
-# OTUS Lessons
+# OTUS 
+
+Linux Administrator. Professional

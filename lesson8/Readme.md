@@ -97,4 +97,3 @@ ls /storage/data
 cat /storage/data/task1/file_mess/secret_message
 ```
 > https://github.com/sindresorhus/awesome
-

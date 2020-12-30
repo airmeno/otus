@@ -74,3 +74,4 @@ Ctrl-x выйдет из редактирования параметров и п
 см файл [scriptfile3](https://github.com/airmeno/otus/blob/main/lesson5/typescript3)
 
 ![Image 9](https://github.com/airmeno/otus/blob/main/lesson5/images/9.jpg)
+

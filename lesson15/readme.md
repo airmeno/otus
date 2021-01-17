@@ -158,7 +158,7 @@ ausearch -c 'isc-worker0000' --raw | audit2allow -M my-iscworker0004
 semodule -i my-iscworker0004.pp
 ```
 
-Ошибок в журнале больше нет, но в статусе named есть ошибки:
+5. Ошибок в журнале больше нет, но в статусе named есть ошибки:
 
 ```
 systemctl ststus named
@@ -166,7 +166,7 @@ systemctl ststus named
 
 ![Image 7](images/7.jpg)
 
-Удалим журнал на который ругается и перзапустим 
+6. Удалим журнал на который ругается и перзапустим 
 
 ```
 rm /etc/named/dynamic/named.ddns.lab.view1.jnl
@@ -175,7 +175,7 @@ systemctl reload named
 systemctl status named
 ```
 
-Ошибок нет. Попробуем обновить запись через клиента:
+7. Ошибок нет. Попробуем обновить запись через клиента:
 
 ![Image 8](images/8.jpg)
 

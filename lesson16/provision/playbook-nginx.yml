@@ -1,0 +1,7 @@
+---
+- name: Otus Lesson Ansible
+  hosts: all
+  become: yes
+
+  roles: 
+    - deploy_nginx

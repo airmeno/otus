@@ -1,0 +1,53 @@
+---
+
+- name: OTUS Ansible Lesson
+  hosts: all
+  become: yes
+  vars:
+    nginx_listen_port: 8080
+
+    
+  tasks:
+
+  - block: ########## CentOS #########
+    - name: Epel Repository
+      yum:
+        name: epel-release
+        state: present
+
+    - name: Nginx Install to CentOS
+      yum:
+        name: nginx     
+        state: latest
+      notify:
+        - restart nginx
+    when: ansible_os_family == "RedHat"
+
+  - block: ########## Debian & Ubuntu #########
+    - name: Nginx Install to Debian
+      apt:
+        name: nginx     
+        state: latest
+      notify:
+        - restart nginx
+    when: ansible_os_family == "Debian"  
+
+  - name: Nginx config file from template
+    template:
+      src: nginx.conf.j2
+      dest: /etc/nginx/nginx.conf
+    notify:
+      - reload nginx
+
+
+  handlers:
+  - name: restart nginx
+    systemd:
+      name: nginx
+      state: restarted
+      enabled: yes
+
+  - name: reload nginx
+    systemd:
+      name: nginx
+      state: reloaded

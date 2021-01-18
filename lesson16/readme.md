@@ -11,9 +11,7 @@
 
 ## Решение
 
-Для решения данной задачи подготовлен стенд на Vagrant с тремя серверами (CentOS 7, Ubuntu 20, Debian 10). Задача резвернуть на разные редакции Linux Nginx из одного playbook.
-
-* [Vagrant file](vagrantfile)
+Для решения данной задачи подготовлен стенд на Vagrant с тремя серверами (CentOS 7, Ubuntu 20, Debian 10). Задача резвернуть на разные редакции Linux Nginx из одного playbook - [Vagrant file](vagrantfile).
 
 Сетевые настройки хостов:
 * linux1 (CentOS) - 192.168.50.11
@@ -92,8 +90,10 @@ service: name=nginx state=started enabled=yes
 **Тестируем**
 
 ```
-ansible-playbook playbook.yml
+ansible-playbook playbook/playbook.yml
 ```
+
+На всех трех хостах стартовая страница Nginx будет доступна на порту 8080.
 
 ### Ansible Roles
 
@@ -147,5 +147,6 @@ roles
 **Тестируем**
 
 ```
-ansible-playbook playbook.yml
+ansible-playbook provision/playbook-nginx.yml
 ``` 
+На всех трех хостах стартовая страница Nginx будет доступна на порту 8080.

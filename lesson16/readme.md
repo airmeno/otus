@@ -18,7 +18,7 @@
 * linux2 (Ubuntu) - 192.168.50.12
 * linux3 (Debian) - 192.168.50.13
 
-На стендовой машине развернут Ansible и получит адрес 192.168.50.1
+На стендовой машине развернут Ansible.
 
 Поднимем стенд:
 
@@ -31,15 +31,15 @@ vagrant up
 
 ### Playbook Ansible
 
-**Создаем inventory файл**
+**1. Создаем inventory файл**
 
 [Файл Invetory](playbook/invent)
 
-**Создаем конфиг файл**
+**2. Создаем конфиг файл**
 
 [Файл конфигурации](playbook/ansible.cfg)
 
-**Создаем Playbook**
+**3. Создаем Playbook**
 
 В решении использован метод блочного исполния тасков с условием. Условием является сопоставление переменной аnsible_os_family:
 
@@ -87,7 +87,7 @@ service: name=nginx state=started enabled=yes
 
 [Файл playbook](playbook/playbook.yml)
 
-**Тестируем**
+**4. Тестируем**
 
 ```
 ansible-playbook playbook/playbook.yml
@@ -97,7 +97,7 @@ ansible-playbook playbook/playbook.yml
 
 ### Ansible Roles
 
-**Создаем роль**
+**1. Создаем роль**
 
 ```
 mkdir roles
@@ -128,11 +128,14 @@ roles
         └── main.yml
 
 ```
-Перенесм блоки нашего playbook.yml в иерархию roles
+**2. Перенесм блоки нашего playbook.yml в иерархию roles**
 
 ![Image Yes](images/1.jpg)
 
-Создаем playbook-nginx.yml для нашей роли:
+**3. Создаем playbook для нашей роли:**
+
+
+Создаем в рядом с папкой roles наш playbook файл:
 
 ```
 ---
@@ -143,8 +146,9 @@ roles
   roles: 
     - deploy_nginx
 ```
+[Файл playbook](provision/playbook-nginx.yml)
 
-**Тестируем**
+**4. Тестируем**
 
 ```
 ansible-playbook provision/playbook-nginx.yml

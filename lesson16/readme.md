@@ -1,4 +1,4 @@
-# Lesson 16 (ANSIBLE)
+# Lesson 16 (Ansible)
 
 ## Разворачиваем NGINX через Ansible
 

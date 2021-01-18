@@ -21,7 +21,7 @@
         state: latest
       notify:
         - restart nginx
-    when: ansible_os_family == "R
+    when: ansible_os_family == "RedHat"
 
   - block: ########## Debian & Ubuntu #########
     - name: Nginx Install to Debian

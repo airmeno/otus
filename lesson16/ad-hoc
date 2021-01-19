@@ -1,0 +1,36 @@
+# Ad-Hoc commands
+
+# Ping all hosts
+ansible all -m ping
+
+# List all setup modules on hosts
+ansible all -m setup
+
+# Shell commands 
+ansible all -m shell -a "ls -a $HOME | grep meno"
+ansible all -m command -a "ls -a /home"
+
+# Copy files 
+ansible all -m copy -a "src=file dest=/home mode=777" -b #b = become
+# Delete files
+ansible all -m file -a "path=/home/file.name state=absent" -b
+
+# Download from url 
+ansible all -m get_url -a "url=http://domain.com/file.name dest=/home" -b
+
+# Install / uninstall packeges
+ansible all -m yum -a "name=packege.name state=installed" -b
+ansible all -m yum -a "name=packege.name state=latest" -b
+ansible all -m yum -a "name=packege.name state=removed" -b
+
+# Servise state
+ansible all -m yum -a "name=packege.name state=started enabled=yes" -b
+
+# Verbose commands
+ansible all -m command -a "ls -a /home" -v(vvvv)
+
+ansible all -m systemd -a name=firewalld
+
+# Init Roles
+mkdir roles
+ansible-galaxy init role_name

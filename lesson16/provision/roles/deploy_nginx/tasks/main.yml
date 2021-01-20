@@ -8,9 +8,9 @@
       name: nginx
       description: NGINX
       file: nginx
-      baseurl: https://nginx.org/packages/mainline/centos/7/$basearch/
-      gpgcheck: no
-      enabled: yes  
+      baseurl: https://nginx.org/packages/mainline/centos/$releasever/$basearch/
+      gpgcheck: false
+      enabled: true
 
 
   - name: Nginx Install to CentOS
@@ -36,13 +36,23 @@
       
     - name: Update apt 
       apt:
-        update_cache: yes 
+        update_cache: true 
 
     - name: Nginx Install to Ubuntu
       apt:
         name: nginx     
         state: present
-        update_cache: yes
+        update_cache: true
       notify:
       - restart nginx
   when: ansible_os_family == "Debian"  
+
+
+############### Template #################
+
+- name: Nginx config file from template
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify:
+    - reload nginx

@@ -12,7 +12,7 @@
 
 ## Решение
 
-Для решения данной задачи подготовлен стенд на Vagrant с умя серверами (CentOS 7, Ubuntu 20). Задача резвернуть на разные редакции Linux Nginx из одного playbook - **[Vagrant file](vagrantfile)**.
+Для решения данной задачи подготовлен стенд на Vagrant с двумя серверами (CentOS 7, Ubuntu 20). Задача резвернуть на разные редакции Linux Nginx из одного playbook-а - **[Vagrant file](vagrantfile)**.
 
 Сетевые настройки хостов:
 * linux1 (CentOS) - 192.168.50.11
@@ -46,7 +46,7 @@ vagrant up
 ```
 ansible all -m setup | grep os_family
 ```
-CnetOS относится к os_family - RedHat
+CnetOS относится к os_family - RedHat,
 Ubuntu относятся к os_family - Debian
 
 Для разворачивания NGINX используем модуль yum и apt для CentOS и Debian соответственно.
@@ -104,7 +104,7 @@ server {
 
 ```
 
-**5. Запущен через systemd**
+**5. Запускаем через systemd**
 
 Чтоб NGINX был запущен:
 
@@ -140,7 +140,7 @@ mkdir roles
 ansible-galaxy init deploy_nginx
 ```
 
-Будет создана директория deploy_nginx и иерархией:
+Будет создана директория deploy_nginx с иерархией:
 
 ```
 tree roles

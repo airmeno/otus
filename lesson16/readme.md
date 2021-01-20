@@ -3,12 +3,12 @@
 ## Разворачиваем NGINX через Ansible
 
 **Условия задачи:**
-* необходимо использовать модуль yum/apt
-* конфигурационные файлы должны быть взяты из шаблона jinja2 с перемененными
-* после установки nginx должен быть в режиме enabled в systemd
-* должен быть использован notify для старта nginx после установки
-* сайт должен слушать на нестандартном порту - 8080, для этого использовать переменные в Ansible
-* **установка Nginx с официального репозитория** - условие с занятия
+* необходимо использовать модуль yum/apt;
+* конфигурационные файлы должны быть взяты из шаблона jinja2 с перемененными;
+* после установки nginx должен быть в режиме enabled в systemd;
+* должен быть использован notify для старта nginx после установки;
+* сайт должен слушать на нестандартном порту - 8080, для этого использовать переменные в Ansible;
+* **установка Nginx с официального репозитория** - условие с занятия.
 
 ## Решение
 
@@ -26,7 +26,7 @@
 vagrant up
 ```
 
-**Решение задачи: достаточно развернуть vagrant файл.**
+**Результат задачи: достаточно развернуть vagrant файл.**
 
 
 ## Playbook Ansible
@@ -46,8 +46,8 @@ vagrant up
 ```
 ansible all -m setup | grep os_family
 ```
-CnetOS относится к os_family - RedHat,
-Ubuntu относятся к os_family - Debian
+* CnetOS относится к os_family - RedHat
+* Ubuntu относятся к os_family - Debian
 
 Для разворачивания NGINX используем модуль yum и apt для CentOS и Debian соответственно.
 
@@ -79,9 +79,9 @@ server {
         name: nginx
         description: NGINX
         file: nginx
-        baseurl: https://nginx.org/packages/mainline/centos/7/$basearch/
-        gpgcheck: no
-        enabled: yes  
+        baseurl: https://nginx.org/packages/mainline/centos/$releasever/$basearch/
+        gpgcheck: false
+        enabled: true
 ```
 и для deb:
 
@@ -100,7 +100,7 @@ server {
       
       - name: Update apt 
         apt:
-          update_cache: yes 
+          update_cache: true 
 
 ```
 
@@ -118,7 +118,7 @@ service: name=nginx state=started enabled=yes
   systemd:
       name: nginx
       state: restarted
-      enabled: yes
+      enabled: true
 ```
 
 [Файл playbook](playbook/playbook.yml)
@@ -177,7 +177,7 @@ roles
 ---
 - name: Otus Lesson Ansible
   hosts: all
-  become: yes
+  become: true
 
   roles: 
     - deploy_nginx

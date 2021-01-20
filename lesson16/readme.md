@@ -46,10 +46,10 @@ vagrant up
 ```
 ansible all -m setup | grep os_family
 ```
-* CnetOS относится к os_family - RedHat
+* CentOS относится к os_family - RedHat
 * Ubuntu относятся к os_family - Debian
 
-Для разворачивания NGINX используем модуль yum и apt для CentOS и Debian соответственно.
+Для разворачивания NGINX используем модуль yum и apt для CentOS и Ubuntu соответственно.
 
 Для запуска NGINX на нестандартом порту используем шаблон jinja2 с перемнной nginx_listen_port:
 
@@ -72,7 +72,7 @@ server {
 
 **4. Подключаем репозиторий Nginx**
 
-Для rpm:
+Для CentOS:
 ```
     - name: Add Nginx Repository for CentOS
       yum_repository:
@@ -83,7 +83,7 @@ server {
         gpgcheck: false
         enabled: true
 ```
-и для deb:
+и для Ubuntu. Для определения релиза используем переменные ansible_distribution_release:
 
 ```
       - name: Add key for Repository
@@ -91,7 +91,7 @@ server {
           url: http://nginx.org/keys/nginx_signing.key
           state: present
 
-      - name: Install Nginx Repo Debian
+      - name: Install Nginx Repo Ubuntu
         apt_repository:
           repo: deb http://nginx.org/packages/mainline/ubuntu/ {{ ansible_distribution_release }} nginx
           state: present

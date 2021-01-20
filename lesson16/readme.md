@@ -8,15 +8,15 @@
 * после установки nginx должен быть в режиме enabled в systemd
 * должен быть использован notify для старта nginx после установки
 * сайт должен слушать на нестандартном порту - 8080, для этого использовать переменные в Ansible
+* **установка Nginx с официального репозитория** - условие с занятия
 
 ## Решение
 
-Для решения данной задачи подготовлен стенд на Vagrant с тремя серверами (CentOS 7, Ubuntu 20, Debian 10). Задача резвернуть на разные редакции Linux Nginx из одного playbook - **[Vagrant file](vagrantfile)**.
+Для решения данной задачи подготовлен стенд на Vagrant с умя серверами (CentOS 7, Ubuntu 20). Задача резвернуть на разные редакции Linux Nginx из одного playbook - **[Vagrant file](vagrantfile)**.
 
 Сетевые настройки хостов:
 * linux1 (CentOS) - 192.168.50.11
 * linux2 (Ubuntu) - 192.168.50.12
-* linux3 (Debian) - 192.168.50.13
 
 На стендовой машине развернут Ansible.
 
@@ -47,7 +47,7 @@ vagrant up
 ansible all -m setup | grep os_family
 ```
 CnetOS относится к os_family - RedHat
-Ubuntu и Debian относятся к os_family - Debian
+Ubuntu относятся к os_family - Debian
 
 Для разворачивания NGINX используем модуль yum и apt для CentOS и Debian соответственно.
 
@@ -70,6 +70,42 @@ server {
 [Файл nginx.conf](playbook/nginx.conf.j2)
 
 
+**4. Подключаем репозиторий Nginx**
+
+Для rpm:
+```
+    - name: Add Nginx Repository for CentOS
+      yum_repository:
+        name: nginx
+        description: NGINX
+        file: nginx
+        baseurl: https://nginx.org/packages/mainline/centos/7/$basearch/
+        gpgcheck: no
+        enabled: yes  
+```
+и для deb:
+
+```
+      - name: Add key for Repository
+        apt_key:
+          url: http://nginx.org/keys/nginx_signing.key
+          state: present
+
+      - name: Install Nginx Repo Debian
+        apt_repository:
+          repo: deb http://nginx.org/packages/mainline/ubuntu/ {{ ansible_distribution_release }} nginx
+          state: present
+          filename: nginx.list
+          update_cache: true
+      
+      - name: Update apt 
+        apt:
+          update_cache: yes 
+
+```
+
+**5. Запущен через systemd**
+
 Чтоб NGINX был запущен:
 
 ```
@@ -87,13 +123,13 @@ service: name=nginx state=started enabled=yes
 
 [Файл playbook](playbook/playbook.yml)
 
-**4. Тестируем**
+**6. Тестируем**
 
 ```
 ansible-playbook playbook/playbook.yml
 ```
 
-На всех трех хостах стартовая страница Nginx будет доступна на порту 8080.
+На обеих хостах стартовая страница Nginx будет доступна на порту 8080.
 
 ## Ansible Roles
 
@@ -130,7 +166,7 @@ roles
 
 **2. Перенос блоков нашего playbook.yml в иерархию roles**
 
-![Image Yes](images/1.jpg)
+![Image Roles](images/1.jpg)
 
 **3. Создаем playbook для нашей роли**
 
@@ -153,4 +189,10 @@ roles
 ```
 ansible-playbook provision/playbook-nginx.yml
 ``` 
-На всех трех хостах стартовая страница Nginx будет доступна на порту 8080.
+На обеих хостах стартовая страница Nginx будет доступна на порту 8080, версии Nginx идентичны и установлены с официального репозитория. 
+
+Для CentOS:
+![Image Centos](images/2.jpg)
+
+Для Ubuntu:
+![Image Ubuntu](images/3.jpg)

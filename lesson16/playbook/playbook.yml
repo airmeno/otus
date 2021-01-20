@@ -2,35 +2,66 @@
 
 - name: OTUS Ansible Lesson
   hosts: all
-  become: yes
+  become: true
   vars:
     nginx_listen_port: 8080
 
+######## Tasks #################
     
   tasks:
 
   - block: ########## CentOS #########
-    - name: Epel Repository
-      yum:
-        name: epel-release
-        state: present
+#    - name: Epel Repository
+#      yum:
+#        name: epel-release
+#        state: present
+
+    - name: Add Nginx Repository for CentOS
+      yum_repository:
+        name: nginx
+        description: NGINX
+        file: nginx
+        baseurl: https://nginx.org/packages/mainline/centos/7/$basearch/
+        gpgcheck: no
+        enabled: yes  
+
 
     - name: Nginx Install to CentOS
       yum:
         name: nginx     
-        state: latest
+        state: present
       notify:
         - restart nginx
     when: ansible_os_family == "RedHat"
 
-  - block: ########## Debian & Ubuntu #########
-    - name: Nginx Install to Debian
-      apt:
-        name: nginx     
-        state: latest
-      notify:
+  - block: ########## buntu #########
+      - name: Add key for Repository
+        apt_key:
+          url: http://nginx.org/keys/nginx_signing.key
+          state: present
+
+      - name: Install Nginx Repo Ubuntu
+        apt_repository:
+          repo: deb http://nginx.org/packages/mainline/ubuntu/ {{ ansible_distribution_release }} nginx
+          state: present
+          filename: nginx.list
+          update_cache: true
+      
+      - name: Update apt 
+        apt:
+          update_cache: yes 
+
+      - name: Nginx Install to Ubuntu
+        apt:
+          name: nginx     
+          state: present
+          update_cache: yes
+        notify:
         - restart nginx
     when: ansible_os_family == "Debian"  
+
+
+############### Template #################
 
   - name: Nginx config file from template
     template:
@@ -39,7 +70,7 @@
     notify:
       - reload nginx
 
-
+######## Handlers ##############
   handlers:
   - name: restart nginx
     systemd:

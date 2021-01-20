@@ -9,7 +9,7 @@ Vagrant.configure(2) do |config|
   end
       
   config.vm.provision "ansible" do |ansible|
-  #ansible.verbose = "vv"
+  #ansible.verbose = "vvv"
   ansible.playbook = "provision/playbook-nginx.yml"
   ansible.become = "true"  
   end
@@ -27,14 +27,6 @@ Vagrant.configure(2) do |config|
     linux2.vm.network "private_network", ip: "192.168.50.12"
     linux2.vm.hostname = "linux2"
     linux2.vm.provider :virtualbox do |vb|
-  end
-  end
-
-  config.vm.define "linux3" do |linux3|
-    linux3.vm.box = "debian/buster64"   
-    linux3.vm.network "private_network", ip: "192.168.50.13"
-    linux3.vm.hostname = "linux3"
-    linux3.vm.provider :virtualbox do |vb|
   end
   end
 

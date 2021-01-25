@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+ nginx:
+  image: airmeno/otus-nginx
+  ports:
+   - 80:80
+  volumes:
+   - ./code:/www:rw
+  working_dir: /www  
+  links:
+   - myphp
+ 
+ myphp:
+  image: airmeno/otus-php
+  container_name: myphp
+  volumes:
+   - ./code:/www:rw
+  working_dir: /www   

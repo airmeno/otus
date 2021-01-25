@@ -1,0 +1,15 @@
+#Base OS
+FROM php:7.4-fpm-alpine
+# Copyrights
+MAINTAINER airmeno <meno@list.ru>
+
+RUN apk update && \
+	  apk upgrade && \
+    apk add --no-cache php-mbstring php-cli php-simplexml && \
+    rm -rf /var/cache/apk/*
+
+WORKDIR /www
+
+EXPOSE 9000
+
+CMD ["php-fpm", "--nodaemonize"]

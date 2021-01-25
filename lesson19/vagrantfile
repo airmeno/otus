@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+    v.cpus = 1
+  end
+      
+  config.vm.provision "ansible" do |ansible|
+  #ansible.verbose = "vvv"
+  ansible.playbook = "playbook-docker.yml"
+  ansible.become = "true"  
+  end
+
+
+  config.vm.define "linux1" do |linux1|
+    linux1.vm.network "private_network", ip: "192.168.50.11"
+    linux1.vm.hostname = "linux1"
+    linux1.vm.provider :virtualbox do |vb|
+    end  
+  end
+  config.vm.provision "shell", inline: <<-SHELL
+    docker build -t airmeno/mynginx task1
+    docker run -it -d -p 8080:80 airmeno/mynginx
+    docker-compose -f task2/docker-compose.yml up -d 
+    SHELL
+end

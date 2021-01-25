@@ -1,0 +1,34 @@
+# Base OS
+FROM  alpine:latest
+
+# Copyrights
+MAINTAINER airmeno <meno@list.ru>
+
+# install packeges 
+# install packeges 
+RUN apk update && \
+	apk upgrade && \
+	apk add --update nginx && \
+	rm -rf /var/cache/apk/* && \
+	mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.orig && \
+	adduser -D -g 'www' www && \
+	mkdir /www && \
+	mkdir /run/nginx && \
+	chown -R www:www /var/lib/nginx && \
+	chown -R www:www /run/nginx && \
+	chown -R www:www /www
+
+# Copy config and index files
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose volumes
+VOLUME ["/run/nginx", "/www"]
+
+# expose HTTP
+EXPOSE 80
+
+STOPSIGNAL SIGTERM
+
+# Run
+CMD ["nginx", "-g", "daemon off;"]
+

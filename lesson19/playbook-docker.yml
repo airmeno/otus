@@ -1,0 +1,32 @@
+---
+- name: Otus Lesson Docker
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Packege Install
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+         - epel-release
+         - curl
+         - bash-completion.noarch
+         - docker
+         - docker-compose
+      notify:
+        - restart docker
+      when: ansible_distribution == 'CentOS'       
+
+    - name: Copy task files
+      copy: 
+        src: files/ 
+        dest: /home/vagrant/
+
+  handlers:
+  - name: restart docker
+    systemd:
+      name: docker
+      state: restarted
+      enabled: true

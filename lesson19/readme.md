@@ -9,7 +9,7 @@
 
 ## Решение
 
-Создадим тестовую среду для выполняния задач с Docker и Docker-Compose - **[Vagrant file](vagrantfile)**. После запуска Vagrant наш докер контейнер ответит на по адресу http://192.168.50.11.
+Создадим тестовую среду для выполняния задач с Docker и Docker-Compose - **[Vagrant file](vagrantfile)**. После запуска Vagrant наш докер контейнер ответит по адресу http://192.168.50.11:8080.
 
 ![Image OK](images/1-1.jpg)
 
@@ -53,7 +53,7 @@ STOPSIGNAL SIGTERM
 CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
 ```
 
-Соберем наш образ с именем airmeno/mynginx, по умолчанию Docker ищет инструкции в dockerfile
+Соберем наш образ с именем airmeno/mynginx, по умолчанию Docker ищет инструкции в dockerfile:
 
 ```
 docker build -t airmeno/mynginx .
@@ -163,11 +163,11 @@ docker ps -a
 * nginx - директория для сборки контейнера Nginx
 * php - диретория для сборки PHP
 
-** Nginx. Сборка контейнера на базе Alpine Linux **
+**Nginx. Сборка контейнера на базе Alpine Linux**
 
 [Dockerfile](files/task2/nginx/dockerfile)
 
-** PHP. Сборка контейнера на базе Alpine Linux + PHP-FPM **
+**PHP. Сборка контейнера на базе Alpine Linux + PHP-FPM**
 
 Собираем контейнер из alpine-7.4-php-fpm и устанавливаем необходимые модули php.
 
@@ -175,7 +175,7 @@ docker ps -a
 
 > Alpine Linux Nginx + PHP - https://wiki.alpinelinux.org/wiki/Nginx_with_PHP
 
-** Docker Compose. Формируем сборку **
+**Docker Compose. Формируем сборку**
 
 [Docker-compose file](files/task2/docker-compose.yml)
 ```

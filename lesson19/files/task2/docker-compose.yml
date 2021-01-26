@@ -6,7 +6,7 @@ services:
   ports:
    - 80:80
   volumes:
-   - ./code:/www:rw
+   - ./code:/www:z
   working_dir: /www  
   links:
    - myphp
@@ -15,5 +15,5 @@ services:
   build: ./php
   container_name: myphp
   volumes:
-   - ./code:/www:rw
-  working_dir: /www    
+   - ./code:/www:z
+  working_dir: /www

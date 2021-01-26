@@ -7,9 +7,17 @@
 * Ответить на вопрос: Можно ли в контейнере собрать ядро?
 * Собранный образ необходимо запушить в docker hub и дать ссылку на репозиторий.
 
-## Решение
+## Задача 2
 
-Создадим тестовую среду для выполняния задач с Docker и Docker-Compose - **[Vagrant file](vagrantfile)**. После запуска Vagrant наш докер контейнер ответит по адресу http://192.168.50.11:8080.
+* Создать кастомные образы nginx и php, объедините их в docker-compose;
+* После запуска nginx должен показывать php info;
+* Все собранные образы должны быть в docker hub.
+
+## Решения
+
+Создадим тестовую среду для выполняния задач с Docker и Docker-Compose - **[Vagrant file](vagrantfile)**. После запуска Vagrant наш докер контейнер ответит по адресу http://192.168.50.11:8080 для **задачи 1**и по адресу http://192.168.50.11 для **задачи 2**. 
+
+## Решение задачи 1
 
 ![Image OK](images/1-1.jpg)
 
@@ -93,7 +101,7 @@ docker push airmeno/aplpine-nginx
 ```
 Образ на Docker Hub - https://hub.docker.com/repository/docker/airmeno/alpine-nginx
 
-Для запуска нашего контенера на любом Docker:
+Для запуска нашего контейнера на любом Docker:
 
 ```
 docker run -it -d -p 80:80 airmeno/alpine-nginx
@@ -139,7 +147,7 @@ docker ps -a
 * Все собранные образы должны быть в docker hub.
 
 
-## Решение
+## Решение задачи 2
 
 Создадим тестовую среду для выполняния задач с Docker и Docker-Compose.
 
@@ -161,7 +169,7 @@ docker ps -a
 
 * code - директория проекта, тут наши файлы, что формируют вывод Nginx
 * nginx - директория для сборки контейнера Nginx
-* php - диретория для сборки PHP
+* php - директория для сборки PHP
 
 **Nginx. Сборка контейнера на базе Alpine Linux**
 
@@ -251,3 +259,27 @@ services:
 docker-compose -f path_to/docker-compose.yaml up -d
 ```
 
+## Важно!
+> Если Docker-хост на CentOS скорее будут проблемы с недоступностью страницы сайта. Это блокирует SELinux. **Решение проблемы:** отключить SELinux или в docker-compose.yaml вместо прав rw назначить z или Z. Для CentOS файл будет выглядеть так:
+
+```
+version: '3'
+
+services:
+ nginx:
+  image: airmeno/otus-nginx
+  ports:
+   - 80:80
+  volumes:
+   - ./code:/www:z
+  working_dir: /www  
+  links:
+   - myphp
+ 
+ myphp:
+  image: airmeno/otus-php
+  container_name: myphp
+  volumes:
+   - ./code:/www:z
+  working_dir: /www 
+```

@@ -285,3 +285,4 @@ services:
    - ./code:/www:z
   working_dir: /www 
 ```
+> Подробно - https://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/

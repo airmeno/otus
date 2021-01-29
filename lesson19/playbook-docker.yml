@@ -11,8 +11,6 @@
         state: present
       loop:
          - epel-release
-         - curl
-         - bash-completion.noarch
          - docker
          - docker-compose
       notify:

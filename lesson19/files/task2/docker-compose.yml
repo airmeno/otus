@@ -7,13 +7,16 @@ services:
    - 80:80
   volumes:
    - ./code:/www:z
-  working_dir: /www  
-  links:
-   - myphp
+  networks:
+   - nginx-php
  
  myphp:
   build: ./php
   container_name: myphp
   volumes:
    - ./code:/www:z
-  working_dir: /www
+  networks:
+   - nginx-php
+
+networks:
+  nginx-php:

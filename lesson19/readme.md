@@ -196,17 +196,20 @@ services:
   ports:
    - 80:80
   volumes:
-   - ./code:/var/www:rw
-  working_dir: /var/www  
-  links:
-   - myphp
+   - ./code:/www:rw
+  networks:
+   - nginx-php
  
  myphp:
   build: ./php
   container_name: myphp
   volumes:
-   - ./code:/var/www:rw
-  working_dir: /var/www 
+   - ./code:/www:rw
+  networks:
+   - nginx-php
+
+networks:
+  nginx-php:
 ```
 
 Запускаем контейнеры:
@@ -241,16 +244,19 @@ services:
    - 80:80
   volumes:
    - ./code:/www:rw
-  working_dir: /www  
-  links:
-   - myphp
+  networks:
+   - nginx-php
  
  myphp:
   image: airmeno/otus-php
   container_name: myphp
   volumes:
    - ./code:/www:rw
-  working_dir: /www    
+  networks:
+   - nginx-php
+
+networks:
+  nginx-php:   
 ```
 [Docker-compose file](docker-compose.yaml)
 
@@ -275,15 +281,18 @@ services:
    - 80:80
   volumes:
    - ./code:/www:z
-  working_dir: /www  
-  links:
-   - myphp
+  networks:
+   - nginx-php
  
  myphp:
   image: airmeno/otus-php
   container_name: myphp
   volumes:
    - ./code:/www:z
-  working_dir: /www 
+  networks:
+   - nginx-php
+
+networks:
+  nginx-php:
 ```
 > Подробно - https://www.projectatomic.io/blog/2015/06/using-volumes-with-docker-can-cause-problems-with-selinux/

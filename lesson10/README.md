@@ -85,8 +85,8 @@ dd if=/dev/zero of=/tmp/nice.img bs=1M count=1024
 ```
 
 Значения nice:
-* наибольший приоритет: -19
-* наименьший приоритет: 20
+* наибольший приоритет: -20
+* наименьший приоритет: 19
 
 Для замера значения времени исполнения воспользуемся командой time.
 
@@ -97,6 +97,8 @@ dd if=/dev/zero of=/tmp/nice.img bs=1M count=1024
 time nice -n -20 su -c "dd if=/dev/zero of=/tmp/nice1.img bs=1M count=1024" &  
 time nice -n 19 su -c "dd if=/dev/zero of=/tmp/nice2.img bs=1M count=1024" &
 ```
+
+Скрипт - [nice.sh](nice.sh)
 
 И результат выполнения:
 ```

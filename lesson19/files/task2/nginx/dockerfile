@@ -30,5 +30,4 @@ EXPOSE 80
 STOPSIGNAL SIGTERM
 
 # Run
-CMD ["nginx", "-g", "daemon off;"]
-
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

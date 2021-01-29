@@ -58,7 +58,7 @@ EXPOSE 80
 STOPSIGNAL SIGTERM
 
 # Run
-CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/usr/sbin/nginx", "-g", "daemon off;"]
 ```
 
 Соберем наш образ с именем airmeno/mynginx, по умолчанию Docker ищет инструкции в dockerfile:

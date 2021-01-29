@@ -139,6 +139,7 @@ docker ps -a
 
 ![Image Docker](images/1-2.jpg)
 
+> Ответ на этот вопрос не однозначен. Скорее всего собрать можно - https://registry.hub.docker.com/r/moul/kernel-builder или https://hub.docker.com/r/arckosfr/buildkernel/, но по сути это противоречит идеологии контейнеризации. И думаю, что запуститься с собранного ядра не получится. 
 
 ## Задача 2
 

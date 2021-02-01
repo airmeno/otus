@@ -35,6 +35,12 @@ wget https://releases.hashicorp.com/vagrant/2.2.14/vagrant_2.2.14_x86_64.deb
 sudo dpkg -i vagrant_2.2.14_x86_64.deb
 ```
 
+или с репозитория
+
+```
+sudo apt install vagrant
+```
+
 ### Ansible 
 
 ```

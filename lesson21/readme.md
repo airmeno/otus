@@ -17,7 +17,7 @@
 
 После запуска vagrant наш frontend сервера zabbix будет доступен по адресу http://192.168.50.11.
 
-Наш dashboard требуемыми настройками:
+Наш dashboard c требуемыми настройками:
 
 ![zabbix_dashboard](images/zabbix-dashboard.jpg)
 

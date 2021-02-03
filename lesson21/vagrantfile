@@ -16,7 +16,7 @@ Vagrant.configure(2) do |config|
     linux1.vm.hostname = "linux1"
     linux1.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
-      #linux1.vm.provision "shell", path: "zabbix.sh"
+      linux1.vm.provision "shell", path: "zabbix.sh"
   end
   end
 

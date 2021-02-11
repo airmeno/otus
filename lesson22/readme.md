@@ -1,4 +1,4 @@
-# Lesson 22 - 23 (Logs / ELK)
+# Lesson 22 (Logs / ELK)
 
 ## Задача
 
@@ -510,3 +510,43 @@ tail -f /var/log/filebeat/filebeat
 
 ![Image Kibana4](images/kibana-4.jpg)
 
+
+### Подключаем стандартный модуль Nginx Filebeat
+
+Настройки для filebeat:
+
+```
+....
+filebeat.inputs:
+
+- type: log
+  enabled: true
+
+  paths:
+    - /var/log/nginx/*.log
+  exclude_files: ['.gz$']
+....
+
+....
+setup.kibana:
+  host: "192.168.50.30:5601"
+
+output.elasticsearch:
+  hosts: ["192.168.50.30:9200"]
+....
+
+```
+
+```
+filebeat modules enable nginx
+```
+
+
+```
+filebeat setup
+
+systemctl restart filebeat
+```
+![Image Kibana5](images/kibana-5.jpg)
+
+![Image Kibana6](images/kibana-6.jpg)

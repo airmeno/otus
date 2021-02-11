@@ -42,4 +42,6 @@ sudo systemctl daemon-reload && sudo systemctl restart rsyslog; sudo systemctl s
 # Config filebeat
 sudo cp /vagrant/configs/web-filebeat.yml /etc/filebeat/filebeat.yml
 
+sudo filebeat modules enable nginx
+sudo filebeat setup
 sudo systemctl enable filebeat --now

@@ -1,0 +1,90 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+disk1 = "./disk.vdi"
+
+Vagrant.configure("2") do |config|
+
+config.vm.define "server" do |server|
+server.vm.box = "centos/7"
+server.vm.network "private_network", ip: "192.168.50.10"
+server.vm.hostname = "server"
+server.vm.provider :virtualbox do |vb|
+  vb.customize ["modifyvm", :id, "--memory", "512"]
+  vb.customize ["modifyvm", :id, "--cpus", "1"]
+
+  unless FileTest.exist?(disk1)
+  vb.customize ['createhd', '--filename', disk1, '--variant', 'Fixed', '--size', 2 * 1024]
+  end
+  vb.customize ['storageattach', :id,  '--storagectl', 'IDE', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk1]
+  end
+
+server.vm.provision "shell", inline: <<-SHELL
+
+  ##### create and mount backup disk #######
+  parted /dev/sdb mklabel msdos
+  parted /dev/sdb mkpart primary 0% 100%
+  mkfs.xfs /dev/sdb1
+  mkdir /var/backup
+  if grep -Fxq "sdb1" /etc/fstab
+  then
+    echo 'sdb1 exist in fstab'
+  else
+    echo `blkid /dev/sdb1 | awk '{print$2}' | sed -e 's/"//g'` /var/backup   xfs   noatime,nobarrier   0   0 >> /etc/fstab
+  fi
+  if mount | grep /var/backup > /dev/null; then
+    echo "/dev/sdb1 mounted /var/backup"
+    umount /var/backup
+    mount /var/backup
+  else
+    mount /var/backup
+  fi  
+  ###########################################
+
+  mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh
+  sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  systemctl restart sshd
+
+  timedatectl set-timezone Europe/Moscow
+  yum install -y epel-release && yum install -y ntp borgbackup
+  systemctl enable ntpd --now     
+
+  useradd -m borg
+  sudo echo 123456 | passwd borg --stdin  
+
+  echo "192.168.50.20 borg-client" >> /etc/hosts
+  sudo chown -R borg /var/backup/
+  SHELL
+ #server.vm.provision  "shell", path: "server.sh"
+end
+
+config.vm.define "client" do |client|
+client.vm.box = "centos/7"
+client.vm.network "private_network", ip: "192.168.50.20"
+client.vm.hostname = "client"
+client.vm.provider :virtualbox do |vb|
+  vb.customize ["modifyvm", :id, "--memory", "512"]
+  vb.customize ["modifyvm", :id, "--cpus", "1"]
+  end
+client.vm.provision "shell", inline: <<-SHELL
+  mkdir -p ~root/.ssh; cp ~vagrant/.ssh/auth* ~root/.ssh
+  sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  systemctl restart sshd
+
+  timedatectl set-timezone Europe/Moscow
+  yum install -y epel-release && yum install -y ntp borgbackup mc
+  systemctl enable ntpd --now     
+  
+  useradd -m borg
+  sudo echo 123456 | passwd borg --stdin
+  
+  echo "192.168.50.10 borg-server" >> /etc/hosts
+  sudo cp /vagrant/borg-backup.sh /home/borg/borg-backup.sh
+  chown borg:borg /home/borg/borg-backup.sh; chmod +x /home/borg/borg-backup.sh
+  sudo cp /vagrant/borg-backup.service /etc/systemd/system/
+  sudo cp /vagrant/borg-backup.timer /etc/systemd/system/ 
+  sudo usermod -aG wheel borg
+  SHELL
+ # client.vm.provision  "shell", path: "client.sh" 
+end
+end

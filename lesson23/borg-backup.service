@@ -1,0 +1,10 @@
+[Unit]
+Description=Borg Client Backup
+ 
+[Service]
+Type=oneshot
+Nice=19
+ExecStartPre=/usr/bin/borg break-lock borg@borg-server:/var/backup/BorgRepo
+ExecStart=/home/borg/borg-backup.sh
+User=borg
+Group=borg

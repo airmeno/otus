@@ -1,0 +1,10 @@
+[Unit]
+Description=Borg Client Backup Timer
+ 
+[Timer]
+# Run every 300 second
+OnUnitActiveSec=300
+Unit=borg-backup.service
+ 
+[Install]
+WantedBy=multi-user.target

@@ -71,7 +71,7 @@ Office2----/
 
 Схема стенда:
 
-![Image netstand1](images/netstand1.jpg)
+![Image netstand1](images/netstand1.png)
 
 Разеберем сществующие подсети:
 
@@ -157,7 +157,7 @@ Hosts: 126
 
 Для полного понимания сетевого взаимодействия и выполнения практического задания изобразим инфраструктуру: 
 
-![Image netstand2](images/netstand2.jpg)
+![Image netstand2](images/netstand2.png)
 
 Вся сетевая архитектура собрана в [Vagrantfile](vagrantfile).
 

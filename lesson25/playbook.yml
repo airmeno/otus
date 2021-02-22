@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  
+  - name: install packages
+    yum: 
+      name: "{{ item }}"
+      state: latest 
+    loop:
+      - traceroute
+      - mtr

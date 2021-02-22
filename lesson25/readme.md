@@ -232,7 +232,7 @@ nmcli connection modify "System eth1" +ipv4.addresses "192.168.253.1/30"
 
 Для настройки сетевых соединений используем nmcli.
 
-nmcli (network manager command-line interface) — утилита для настройки сети, которая позволяет использовать Network Manager в консоли. Инструмен для настройки сети в Linux.
+nmcli (network manager command-line interface) — утилита для настройки сети, которая позволяет использовать Network Manager в консоли.
 
 Примеры команд nmcli:
 

@@ -22,7 +22,7 @@
 
 ## Решение 
 
-Подправим исходные файл развертнывания (приведем к современному виду) [vagrantfile](Vagrantfile) и [playbook.yml](provisioning/playbook.yml) и добавим настройки для client2.
+Подправим исходные файлы развертнывания (приведем к современному виду) [vagrantfile](Vagrantfile) и [playbook.yml](provisioning/playbook.yml) и добавим настройки для client2.
 
 
 Для разрешения конфликта с SELinux применим контекст безопасности для /etc/named = named_zone_t
@@ -51,7 +51,7 @@ https://docs.ansible.com/ansible/2.9/modules/sefcontext_module.html
 * named.dns.lab.clinet - файл зоны dns.lab для clinet (тут не будет записи web2)
 * named.dns.lab.new - файл зоны newdns.lab
 
-** Настройки сервера BIND для Split-DNS **
+**Настройки сервера BIND для Split-DNS**
 
 В named.conf для мастер сервера добавим значения **acl** и **view**:
 
@@ -93,7 +93,7 @@ view "client2" {
 };
 ```
 
-Для защиты от искажений и подделок ответов сервера, передачи зоны и обновлений зоны используем расширения TSIG ротокола DNS. Для генерации ключей используем утилиту tsig-keygen (из dnssec-keygen удалили алоритм HMAC - https://gitlab.isc.org/isc-projects/bind9/commit/21761bfe799c8f298e3ce26285426b9a30473e6d?view=parallel).
+Для защиты от искажений и подделок ответов сервера, передачи зоны и обновлений зоны используем расширения TSIG протокола DNS. Для генерации ключей используем утилиту tsig-keygen (из dnssec-keygen удалили алоритм HMAC - https://gitlab.isc.org/isc-projects/bind9/commit/21761bfe799c8f298e3ce26285426b9a30473e6d?view=parallel).
 
 ```
 # tsig-keygen -a hmac-md5 client-view

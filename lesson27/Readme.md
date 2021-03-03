@@ -48,12 +48,12 @@ https://docs.ansible.com/ansible/2.9/modules/sefcontext_module.html
 Создадим требуемые файлы и внесем записи в файлы зон:
 
 * named.dns.lab - файл зоны dns.lab
-* named.dns.lab.clinet - файл зоны dns.lab для clinet (тут не будет записи web2)
+* named.dns.lab.client - файл зоны dns.lab для client (тут не будет записи web2)
 * named.dns.lab.new - файл зоны newdns.lab
 
 **Настройки сервера BIND для Split-DNS**
 
-В named.conf для мастер сервера добавим значения **acl** и **view**:
+В named.conf добавим значения **acl** и **view**:
 
 ```
 acl "client" { 192.168.50.15; key client-view; };

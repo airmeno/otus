@@ -55,7 +55,7 @@ nmcli connection
 Создаем интерфейс:
 
 ```
-nmcli con add type bond con-name bond0 ifname bond0 mode active-backup ip4 192.168.50.11/24
+nmcli con add type bond con-name bond0 ifname bond0 bond.options "mode=1,miimon=100,fail_over_mac=1" ip4 192.168.50.11/24
 ```
 * имя - bond0
 * режиме отказоустойчивости (mode=1 - active-backup)

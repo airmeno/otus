@@ -1,0 +1,77 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+
+MACHINES = {
+  :inetRouter => {
+        :box_name => "centos/7",
+        :net => [
+                   {adapter: 2, auto_config: false, virtualbox__intnet: "inetRouter"},
+                   {adapter: 3, auto_config: false, virtualbox__intnet: "inetRouter"},
+                ]
+  },
+  :centralRouter => {
+        :box_name => "centos/7",
+        :net => [
+                   {adapter: 2, auto_config: false, virtualbox__intnet: "inetRouter"},
+                   {adapter: 3, auto_config: false, virtualbox__intnet: "inetRouter"},
+	                 {adapter: 4, auto_config: false, virtualbox__intnet: "testlan"},
+	                 #{adapter: 5, auto_config: false, virtualbox__intnet: "testlan"}
+                ]
+  },
+  :testServer1 => {
+        :box_name => "centos/7",
+        :net => [
+                   {adapter: 2, auto_config: false, virtualbox__intnet: "testlan"}
+                ]
+  },
+  :testClient1 => {
+        :box_name => "centos/7",
+        :net => [
+                   {adapter: 2, auto_config: false, virtualbox__intnet: "testlan"}
+                ]
+  },
+  :testServer2 => {
+        :box_name => "centos/7",
+        :net => [
+                   {adapter: 2, auto_config: false, virtualbox__intnet: "testlan"}
+                ]
+  },
+  :testClient2 => {
+        :box_name => "centos/7",
+        :net => [
+                   {adapter: 2, auto_config: false, virtualbox__intnet: "testlan"}
+                ]
+  },
+}
+
+Vagrant.configure("2") do |config|
+  MACHINES.each do |boxname, boxconfig|
+    config.vm.define boxname do |box|
+        box.vm.box = boxconfig[:box_name]
+        box.vm.host_name = boxname.to_s
+        boxconfig[:net].each do |ipconf|
+          box.vm.network "private_network", **ipconf
+        end
+        box.vm.provider :virtualbox do |vb|
+          vb.customize ["modifyvm", :id, "--memory", "256"]
+        end  
+
+        if boxconfig.key?(:public)
+          box.vm.network "public_network", boxconfig[:public]
+        end
+
+        box.vm.provision "shell", inline: <<-SHELL
+          mkdir -p ~root/.ssh
+                cp ~vagrant/.ssh/auth* ~root/.ssh
+        SHELL
+    end     
+  end
+  config.vm.provision "ansible" do |ansible|
+  #ansible.verbose = "vvv"
+  ansible.compatibility_mode = "2.0"
+  ansible.playbook = "playbook.yml"
+  ansible.become = "true"  
+  end
+end
+

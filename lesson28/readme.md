@@ -21,7 +21,7 @@ testClient2 <-> testServer2
 
 ## Решение
 
-Решением является настроеный [vagrantfile](vagrantfile) и ansible [playbook](playboook.yml).
+Решением является настроеный [vagrantfile](Vagrantfile) и ansible [playbook](playbook.yml).
 
 ### Схема стенда
 

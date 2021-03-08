@@ -30,25 +30,25 @@
   tasks:
   - name: Config VLAN 10
     shell: |
-      nmcli con add type vlan ifname VLAN10 dev eth1 id 10 ip4 10.10.10.254/24
+      nmcli con add type vlan ifname VLAN10 dev eth1 id 10 ip4 10.10.10.1/24
 
 - hosts: testClient1
   become: true
   tasks:
   - name: Config VLAN 10
     shell: |
-      nmcli con add type vlan ifname VLAN10 dev eth1 id 10 ip4 10.10.10.1/24
+      nmcli con add type vlan ifname VLAN10 dev eth1 id 10 ip4 10.10.10.254/24
 
 - hosts: testServer2
   become: true
   tasks:
   - name: Config VLAN 20
     shell: |
-      nmcli con add type vlan ifname VLAN20 dev eth1 id 20 ip4 10.10.10.254/24
+      nmcli con add type vlan ifname VLAN20 dev eth1 id 20 ip4 10.10.10.1/24
 
 - hosts: testClient2
   become: true
   tasks:
   - name: Config VLAN 20
     shell: |
-      nmcli con add type vlan ifname VLAN20 dev eth1 id 20 ip4 10.10.10.1/24
+      nmcli con add type vlan ifname VLAN20 dev eth1 id 20 ip4 10.10.10.254/24

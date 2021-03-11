@@ -29,6 +29,9 @@ yum install libpcap
 rpm -Uvh http://li.nux.ro/download/nux/misc/el7/x86_64/knock-server-0.7-1.el7.nux.x86_64.rpm
 ```
 
+* knockd - демон-сервер
+* knock - клиент
+
 Настроим конфигурацию:
 
 ```
@@ -251,7 +254,7 @@ knock 192.168.50.1 6865:tcp 2635:udp 9851:udp 3648:tcp 8624:tcp 4658:udp -d 500
 
 **Настройки Firewalld**
 
-Для того чтоб centralRouter мог попасть на ssh inetrRouter через knock скрипт без глобальных перенастроек Vagrant (т.е. мы могли иметь доступ в вируальных хостам через vagrant ssh), перенастроим значения по умолчанию для firewalld.
+Для того чтоб centralRouter мог попасть на ssh inetrRouter через knock скрипт без глобальных перенастроек Vagrant (т.е. мы могли иметь доступ в вируальных хостам через ```vagrant ssh```), перенастроим значения по умолчанию для firewalld.
 
 Задача перенести наш сетевой интерфейс в другую зону и все требования по knock производить для данной зоны (зона - otus).
 
@@ -295,6 +298,11 @@ vi /etc/knockd.conf
  stop_command = /bin/firewall-cmd --zone=otus --remove-service=ssh
 
 ```
+где:
+- sequence - порты в которые "стучимся" (tcp:udp);
+- seq_timeout - время ожидания "стуков", если время вышло, а результата нет, то сбрасывается;
+- cmd_timeout - время сколько ожидается после команды старт, чтоб выполнить комнаду стоп, т.е. промежуток когда открыт нужный нам порт.
+
 
 В итоге при "стуке" в **inetRouter** с **centralRouter** будет открыт порт ssh в зоне **otus**
 

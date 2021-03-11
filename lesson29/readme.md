@@ -176,7 +176,7 @@ public (active)
   rich rules: 
 ```
 
-Для упрощение запуска создадим скрипт:
+Для упрощения запуска создадим скрипт:
 
 ```
 #!/bin/env bash
@@ -251,7 +251,7 @@ knock 192.168.50.1 6865:tcp 2635:udp 9851:udp 3648:tcp 8624:tcp 4658:udp -d 500
 
 **Настройки Firewalld**
 
-Для того чтоб centralRouter мог попасть на ssh inetrRouter через knock скрипт без глобальных перенастроке Vagrant (т.е. мы могли иметь доступ в вируальных хостам через vagrant ssh), перенастроим значения по умолчанию для firewalld.
+Для того чтоб centralRouter мог попасть на ssh inetrRouter через knock скрипт без глобальных перенастроек Vagrant (т.е. мы могли иметь доступ в вируальных хостам через vagrant ssh), перенастроим значения по умолчанию для firewalld.
 
 Задача перенести наш сетевой интерфейс в другую зону и все требования по knock производить для данной зоны (зона - otus).
 
@@ -303,7 +303,7 @@ vi /etc/knockd.conf
 
 Работа с зоными firewalld - https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/sec-working_with_zones
 
-Данная алгоритм реализована в [vagrantfile](vagrantfile). 
+Данный алгоритм реализован в [vagrantfile](vagrantfile). 
 
 
 ### Схема:

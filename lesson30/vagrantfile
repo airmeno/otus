@@ -1,0 +1,46 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+
+    config.vm.define "ipaserver" do |s|
+      s.vm.hostname = 'ipaserver.otus.local'
+      s.vm.network "private_network", ip: "192.168.50.10"
+    s.vm.provider :virtualbox do |v|
+      v.name = "ipaserver.otus.local"
+      v.customize ["modifyvm", :id, "--cpus", 2, "--memory", "2048"]
+    end
+
+    s.vm.provision "ansible" do |ansible|
+      ansible.compatibility_mode = "2.0"
+      #ansible.verbose = "vvv"
+      ansible.playbook = "provision/install-server.yml"
+      ansible.become = "true"
+    end
+    s.vm.provision "shell", inline: <<-SHELL
+      mkdir -p ~root/.ssh
+      cp ~vagrant/.ssh/auth* ~root/.ssh
+      SHELL
+  end
+  
+    config.vm.define "client", primary: true do |c|
+      c.vm.hostname = 'client.otus.local'
+      c.vm.network "private_network", ip: "192.168.50.11"
+    c.vm.provider :virtualbox do |v|
+      v.name = "client.otus.local"
+      v.customize ["modifyvm", :id, "--memory", "256"]
+    end
+
+    c.vm.provision "ansible" do |ansible|
+      ansible.compatibility_mode = "2.0"
+      #ansible.verbose = "vvv"
+      ansible.playbook = "provision/install-client.yml"
+      ansible.become = "true"
+    end
+    c.vm.provision "shell", inline: <<-SHELL
+      mkdir -p ~root/.ssh
+      cp ~vagrant/.ssh/auth* ~root/.ssh
+      SHELL
+  end
+end

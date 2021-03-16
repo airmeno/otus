@@ -1,0 +1,85 @@
+---
+- name: Playbook to configure IPA clients with username/password
+  hosts: client
+  become: true
+  vars:
+    ipaclient_allow_repair: yes
+    ipaclient_domain: otus.local
+    ipaclient_realm: OTUS.LOCAL
+    ipaclient_extraargs: [ '--kinit-attempts=3', '--mkhomedir']
+    ipaadmin_principal: admin
+    ipaadmin_password: Pa$$w0rd
+    ipaclient_mkhomedir: yes
+    ipaclient_force_join: yes
+    ipaservers: ipaserver.otus.local
+
+  pre_tasks:
+      
+    # - name: upgrade all packages
+    #   yum: name=* state=latest
+        
+    - name: change dns
+      lineinfile: 
+        dest: /etc/resolv.conf
+        regexp: "{{ item.regexp }}" 
+        line: "{{ item.line }}"
+        backrefs: yes
+      with_items:
+        - { regexp: '^nameserver', line: 'nameserver 192.168.50.10' }
+
+    # - name: change dns
+    #   copy: 
+    #     src: no-dns.conf
+    #     dest: /etc/NetworkManager/conf.d/no-dns.conf
+    #     owner: root
+    #     group: root
+    #     mode: '0644'
+    #   notify:
+    #   - restart NetworkManager
+
+    - name: Add host in /etc/hosts file 
+      lineinfile:
+        line: "{{ item.line }}"
+        dest: "/etc/hosts"
+      with_items:
+        - { line: '192.168.50.10 ipaserver.otus.local  ipaserver' }
+        - { line: '192.168.50.11 client.otus.local  client' }
+          
+
+    # - name: change hosts
+    #   copy: 
+    #     src: hosts
+    #     dest: /etc/hosts
+    #     owner: root
+    #     group: root
+    #     mode: '0644'
+
+
+    - name: Firewalld service running
+      systemd:
+        name: firewalld
+        enabled: true
+        state: started 
+
+    - name: Add NTP service Firewalld
+      firewalld:
+        service: ntp
+        permanent: true
+        state: enabled     
+
+    - name: reload Firewalld
+      systemd:
+        name: firewalld
+        state: reloaded         
+
+
+  roles:
+  - role: ipaclient
+    state: present
+
+
+  # handlers:
+  # - name: restart NetworkManager
+  #   service:
+  #     name: NetworkManager
+  #     state: restarted

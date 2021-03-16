@@ -1,0 +1,69 @@
+---
+- name: Playbook to configure IPA servers
+  hosts: ipaserver
+  become: true
+  vars:
+    ipaadmin_user: admin
+    ipadm_password: Pa$$w0rd
+    ipaadmin_password: Pa$$w0rd
+    ipaserver_domain: otus.local
+    ipaserver_realm: OTUS.LOCAL
+    ipaserver_install_packages: true
+    ipaserver_setup_firewalld: true
+    ipaserver_setup_dns: true
+    ipaserver_forwarders: 8.8.8.8
+    ipaserver_no_ui_redirect: true
+   
+  pre_tasks:
+
+    # - name: upgrade all packages
+    #   yum: name=* state=latest
+               
+    # - name: change hosts
+    #   copy: 
+    #     src: hosts
+    #     dest: /etc/hosts
+    #     owner: root
+    #     group: root
+    #     mode: '0644'
+
+    - name: Delete first line in /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^127.0.0.1'
+        state: absent
+
+    - name: Add hosts in /etc/hosts file 
+      lineinfile:
+        line: "{{ item.line }}"
+        dest: /etc/hosts
+        owner: root
+        group: root
+        mode: '0644'        
+      with_items:
+        - { line: '127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4' }
+        - { line: '192.168.50.10 ipaserver.otus.local  ipaserver' }
+        - { line: '192.168.50.11 client.otus.local  client' }    
+        
+    # - name: Set SELinux in permissive mode
+    #   selinux:
+    #     policy: targeted
+    #     state: permissive
+    
+  roles:
+  - role: ipaserver
+    state: present
+    
+  post_tasks:
+    - name: Add User
+      ipa_user:
+        name: airmeno
+        state: present
+        givenname: airmeno
+        sn: airmeno
+        sshpubkey:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5RE1T/KrHCc7TcU1Ur+mTT2oWwC8gE2DUKrUqu0UotkxVhh7MZ3aEr4Eow96kW5TpfMsqBzAfQW3jjKawuYr+8tYLwdG+L9//OdlE3Sbg8/PaF07jnj4TJDSX/UgIH+48NMru/meRom2LK604PWGXilZyjaOdHWIT5+dKhCdhEpYj8LWZA95hvb9jVW8FcsPZxZuguM8AueXiOBv/53T4fXSvUWD92Edb4vfkmT9J1ZJUKt7SQpQ0xbFVhAl0Po0PbsFk2LzK8lAQcBbTZWEJtR19VObwqs3EPu0kKczMb+NOV7HKtrIP7TV2HK3hXRB7szLSBRsaJqAmLlgj5l4B airmeno
+        password: Pa$$w0rd
+        ipa_host: ipaserver.otus.local
+        ipa_user: admin
+        ipa_pass: Pa$$w0rd

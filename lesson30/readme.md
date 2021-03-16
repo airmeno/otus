@@ -5,10 +5,10 @@
 ```
 LDAP
 
-1.	Установить FreeIPA;
-2.	Написать Ansible playbook для конфигурации клиента;
-3*. Настроить аутентификацию по SSH-ключам;
-4**.Firewall должен быть включен на сервере и на клиенте.
+1.   Установить FreeIPA;
+2.   Написать Ansible playbook для конфигурации клиента;
+3*.  Настроить аутентификацию по SSH-ключам;
+4**. Firewall должен быть включен на сервере и на клиенте.
 
 В git - результирующий playbook.
 ```
@@ -21,8 +21,11 @@ LDAP
 Для установки сервера FreeIPA необходимо произвести первоначальные настройки сервера:
 
 ```
-Server : ipaserver.otus.local
+Server: ipaserver.otus.local
 IP: 192.168.50.10
+
+Client: client.otus.local
+IP: 192.168.50.11
 ```
 
 файл /etc/hosts содержит записи сервера и клиента:
@@ -107,8 +110,6 @@ ipa user-show --all admin
 
 #### Проверка подключения от клиента
 
-**Установка**
-
 Подготовка клиента:
 
 ```
@@ -141,7 +142,7 @@ ipa-client-install --mkhomedir --force-ntpd
 
 > точность времени очень важный фактор для kerberos. Допустимое отклонние времени между сервером и клиентов до 5 минут. 
 
-На основе данных из DNS системв определит настройки и отобразить их в консоли:
+На основе данных из DNS система определит настройки и отобразить их в консоли:
 
 ```
 [root@client vagrant]# ipa-client-install --mkhomedir --force-ntpd
@@ -222,7 +223,7 @@ ipa user-add vivanov --first=Vasiliy --last=Ivanov --cn="Vasiliy Ivanov" --displ
 * настройка файла /etc/hosts
 
 
-**Настриваем [playbook](provision/install-clinet.yml) установки клиента:**
+**Настриваем [playbook](provision/install-client.yml) установки клиента:**
 
 * переменные (конфигурация) клиента - https://github.com/freeipa/ansible-freeipa/tree/master/roles/ipaserver#client-variables
 * настройка файла /etc/resolv.conf
@@ -234,7 +235,7 @@ ipa user-add vivanov --first=Vasiliy --last=Ivanov --cn="Vasiliy Ivanov" --displ
 
 **Добавление пользователя**
 
-В файле плейбука добавим задачу:
+В файл плейбука добавим задачу:
 
 ```
     - name: Add User
@@ -247,7 +248,6 @@ ipa user-add vivanov --first=Vasiliy --last=Ivanov --cn="Vasiliy Ivanov" --displ
         ipa_host: ipaserver.otus.local
         ipa_user: admin
         ipa_pass: Pa$$w0rd
-
 ```
 
 Проверим на клиенте виден ли созданный пользователь:
@@ -341,5 +341,4 @@ ipa user-mod user –sshpubkey='ssh-rsa AAAA…'
         ipa_host: ipaserver.otus.local
         ipa_user: admin
         ipa_pass: Pa$$w0rd
-
 ```

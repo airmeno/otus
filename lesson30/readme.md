@@ -326,7 +326,7 @@ ipa user-mod user –sshpubkey='ssh-rsa AAAA…'
 > Подробнее о SSH - https://www.freeipa.org/images/1/10/Freeipa30_SSSD_OpenSSH_integration.pdf
 
 
-Для собздания пользователя с уже сгененрированным открытым ключом внесем изменения в наш playbook:
+Для создания пользователя с уже сгененрированным открытым ключом внесем изменения в наш playbook:
 
 ```
     - name: Add User

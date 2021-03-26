@@ -155,6 +155,8 @@ Configuration saved to /etc/quagga/ospfd.conf
 [OK]
 ```
 
+> https://www.quagga.net/docs/quagga.html#OSPFv2
+
 Аналогично настроим роутеры `r2` и  `r3`. Проверим таблицу роутинга:
 
 ```
@@ -292,6 +294,33 @@ r1# show ip ospf database router 10.10.10.3
 ```
 
 Тут видна информация о транзитных сетях (Transit Network) и сетях заглушках (Stub Network), метриках.
+
+Просметреть Ntework-LSA на маршрутизаторе:
+
+```
+r1# show ip ospf database network 192.168.10.1
+
+       OSPF Router with ID (10.10.10.1)
+
+
+                Net Link States (Area 0.0.0.0)
+
+  LS age: 169
+  Options: 0x2  : *|-|-|-|-|-|E|*
+  LS Flags: 0x3  
+  LS Type: network-LSA
+  Link State ID: 192.168.10.1 (address of Designated Router)
+  Advertising Router: 10.10.10.1
+  LS Seq Number: 80000001
+  Checksum: 0xe0a6
+  Length: 32
+  Network Mask: /24
+        Attached Router: 10.10.10.1
+        Attached Router: 10.10.10.2
+```
+
+Видим, что 192.168.10.1 соседствует с маршрутизаторами 10.10.10.1 и 10.10.10.2.
+
 
 
 Содержимое конфигурационных файлов `/etc/quagga/zebra.conf` и `/etc/quagga/ospfd.conf`, на их основе создадим шаблоны j2 для ansible:

@@ -295,7 +295,7 @@ r1# show ip ospf database router 10.10.10.3
 
 Тут видна информация о транзитных сетях (Transit Network) и сетях заглушках (Stub Network), метриках.
 
-Просметреть Ntework-LSA на маршрутизаторе:
+Посмотреть Network-LSA на маршрутизаторе:
 
 ```
 r1# show ip ospf database network 192.168.10.1

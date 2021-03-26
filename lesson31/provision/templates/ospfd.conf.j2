@@ -1,0 +1,30 @@
+!
+! Zebra configuration saved from vty
+!   2021/03/26 08:36:06
+!
+hostname {{ router_name }}
+password zebra
+log stdout
+!
+interface eth0
+!
+interface eth1
+ ip ospf cost {{ eth1_cost }}
+!
+interface eth2
+ ip ospf cost {{ eth2_cost }}
+!
+interface lo
+!
+router ospf
+ ospf router-id {{ ipaddr }}
+ passive-interface default
+ no passive-interface eth1
+ no passive-interface eth2
+ network {{ ipaddr }}/{{ prefix }} area 0.0.0.0
+ network {{ eth1_net }} area 0.0.0.0
+ network {{ eth2_net }} area 0.0.0.0
+ {{ default_information_originate }}
+!
+line vty
+!

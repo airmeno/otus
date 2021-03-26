@@ -1,0 +1,99 @@
+---
+- name: Router 2 playbook
+  hosts: r2
+  become: true
+  
+  vars:
+    device: 'lo:2'
+    ipaddr: '10.10.10.2'
+    prefix: '32'
+    network: '10.10.10.2'
+    onboot: 'yes'
+
+    router_name: 'r2'
+    eth1_cost: '10'
+    eth2_cost: '10'
+    eth1_net: '192.168.10.0/24'
+    eth2_net: '192.168.30.0/24'
+    default_information_originate: ''
+
+  tasks:
+  
+    - name: 'Congig sysctl ip_forward'
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        sysctl_set: yes
+        state: present
+        reload: yes
+      notify:
+        - restart network  
+
+    - name: 'Config sysctl rp_filter'
+      sysctl:
+        name: net.ipv4.conf.all.rp_filter
+        value: '0'
+        sysctl_set: yes
+        state: present
+        reload: yes
+      notify:
+        - restart network
+
+    - name: 'Create loopback interface'
+      blockinfile:
+        path: /etc/sysconfig/network-scripts/ifcfg-lo.2
+        create: yes
+        block: |
+          DEVICE="{{ device }}"
+          IPADDR="{{ ipaddr }}"
+          PREFIX="{{ prefix }}"
+          NETWORK="{{ network }}"
+          ONBOOT="{{ onboot }}"
+      notify:
+        - restart network
+
+    - name: 'Install Quagga and tcpdump' 
+      yum:
+        name: 
+          - quagga
+          - libselinux-python
+          - libsemanage-python
+          - tcpdump
+        state: present
+
+    - name: 'Copy /etc/quagga/zebra.conf'
+      template:
+        src: templates/zebra.conf.j2
+        dest: /etc/quagga/zebra.conf
+        owner: quagga
+        group: quaggavt
+        mode: 0660
+
+    - name: 'Copy /etc/quagga/ospfd.conf'
+      template:
+        src: templates/ospfd.conf.j2
+        dest: /etc/quagga/ospfd.conf
+        owner: quagga
+        group: quaggavt
+        mode: 0660  
+    
+    - name: 'Modify SELinux for Quagga'
+      seboolean:
+        name: zebra_write_config
+        state: true
+        persistent: true          
+
+    - name: 'Enable zebra and ospfd'
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      loop:
+        - zebra
+        - ospfd
+
+  handlers:
+    - name: restart network
+      service:
+        name: network
+        state: restarted

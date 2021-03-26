@@ -1,0 +1,9 @@
+---
+- name: 'Playbook to configure Quagga'
+  hosts: all
+  become: true
+
+- import_playbook: provision/router1.yml 
+- import_playbook: provision/router2.yml 
+- import_playbook: provision/router3.yml 
+

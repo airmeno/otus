@@ -114,6 +114,8 @@ ospfd=yes
 setsebool -P zebra_write_config 1
 ```
 
+> https://linux.die.net/man/8/zebra_selinux
+
 ### Настройка динамического роутинга
 
 
@@ -192,7 +194,6 @@ default via 10.0.2.2 dev eth0 proto dhcp metric 100
 	nexthop via 192.168.30.2 dev eth2 weight 1 
 192.168.20.0/24 dev eth1 proto kernel scope link src 192.168.20.2 metric 101 
 192.168.30.0/24 dev eth2 proto kernel scope link src 192.168.30.1 metric 102 
-
 ```
 
 Или через утилиту `vtysh`:
@@ -422,14 +423,12 @@ r3(config-if)# ip ospf  cost  1000
 [root@r3 ~]# ip route get 10.10.10.2
 10.10.10.2 via 192.168.20.1 dev eth1 src 192.168.20.2
 
-
 [root@r2 ~]# ping -I 10.10.10.2 10.10.10.3
 PING 10.10.10.3 (10.10.10.3) from 10.10.10.2 : 56(84) bytes of data.
 64 bytes from 10.10.10.3: icmp_seq=1 ttl=63 time=1.08 ms
 64 bytes from 10.10.10.3: icmp_seq=2 ttl=63 time=3.40 ms
 64 bytes from 10.10.10.3: icmp_seq=3 ttl=63 time=10.4 ms
 64 bytes from 10.10.10.3: icmp_seq=4 ttl=63 time=4.82 ms
-
 
 [root@r2 ~]# tcpdump -i eth2 -n
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
@@ -439,7 +438,6 @@ listening on eth2, link-type EN10MB (Ethernet), capture size 262144 bytes
 09:48:10.557915 IP 10.10.10.2 > 10.10.10.3: ICMP echo request, id 26341, seq 9, length 64
 09:48:11.560650 IP 10.10.10.2 > 10.10.10.3: ICMP echo request, id 26341, seq 10, length 64
 09:48:12.562901 IP 10.10.10.2 > 10.10.10.3: ICMP echo request, id 26341, seq 11, length 64
-
 
 [root@r2 ~]# tcpdump -i eth1 -n
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
@@ -476,7 +474,6 @@ PING 10.10.10.3 (10.10.10.3) from 10.10.10.2 : 56(84) bytes of data.
 64 bytes from 10.10.10.3: icmp_seq=5 ttl=64 time=2.76 ms
 64 bytes from 10.10.10.3: icmp_seq=6 ttl=64 time=1.97 ms
 
-
 [root@r2 ~]# tcpdump -i eth2 -n
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 listening on eth2, link-type EN10MB (Ethernet), capture size 262144 bytes
@@ -490,7 +487,7 @@ listening on eth2, link-type EN10MB (Ethernet), capture size 262144 bytes
 
 ## Результат
 
-1. Vagrant автоматически разворачивает стенд представленный на схеме с ассиметричным роутингом (стоимость на интерфейсе роутера `r3` `eth2` = 1000). Разворачиваение происходить через Ansible.
+1. Vagrant автоматически разворачивает стенд представленный на схеме с ассиметричным роутингом (стоимость на интерфейсе роутера `r3` `eth2` = 1000). Разворачивание происходить через Ansible.
 
 ```
 [root@r3 ~]# vtysh

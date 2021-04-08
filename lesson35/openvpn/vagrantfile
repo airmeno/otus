@@ -1,0 +1,46 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+
+    config.vm.define "ovpn-server" do |s|
+      s.vm.hostname = 'ovpn-server'
+      s.vm.network "private_network", ip: "192.168.10.10"
+    s.vm.provider :virtualbox do |v|
+      v.name = "ovpn-server"
+      v.customize ["modifyvm", :id, "--cpus", 1, "--memory", "1024"]
+    end
+
+    s.vm.provision "ansible" do |ansible|
+      ansible.compatibility_mode = "2.0"
+      #ansible.verbose = "vvv"
+      ansible.playbook = "provision/server.yml"
+      ansible.become = "true"
+    end
+    s.vm.provision "shell", inline: <<-SHELL
+      mkdir -p ~root/.ssh
+      cp ~vagrant/.ssh/auth* ~root/.ssh
+      SHELL
+  end
+  
+    config.vm.define "ovpn-client", primary: true do |c|
+      c.vm.hostname = 'ovpn-client'
+      c.vm.network "private_network", ip: "192.168.10.20"
+    c.vm.provider :virtualbox do |v|
+      v.name = "ovpn-client"
+      v.customize ["modifyvm", :id, "--memory", "512"]
+    end
+
+    c.vm.provision "ansible" do |ansible|
+      ansible.compatibility_mode = "2.0"
+      #ansible.verbose = "vvv"
+      ansible.playbook = "provision/client.yml"
+      ansible.become = "true"
+    end
+    c.vm.provision "shell", inline: <<-SHELL
+      mkdir -p ~root/.ssh
+      cp ~vagrant/.ssh/auth* ~root/.ssh
+      SHELL
+  end
+end

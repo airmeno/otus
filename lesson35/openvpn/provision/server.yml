@@ -1,0 +1,99 @@
+---
+- name: Install OpenVPN Server
+  hosts: ovpn-server
+  become: true
+
+
+  vars:
+    device: 'lo:2'
+    ipaddr: '10.10.10.10'
+    prefix: '32'
+    network: '10.10.10.10'
+    onboot: 'yes'
+
+  tasks:
+  
+    - name: 'Config sysctl ip_forward'
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        sysctl_set: yes
+        state: present
+        reload: yes
+      notify:
+        - restart network    
+
+    - name: 'Create loopback interface'
+      blockinfile:
+        path: /etc/sysconfig/network-scripts/ifcfg-lo.2
+        create: yes
+        block: |
+          DEVICE="{{ device }}"
+          IPADDR="{{ ipaddr }}"
+          PREFIX="{{ prefix }}"
+          NETWORK="{{ network }}"
+          ONBOOT="{{ onboot }}"
+      notify:
+        - restart network    
+
+    - name: 'Install epel-release'
+      yum:
+        name: epel-release
+        state: present
+
+    - name: 'Install OpenVPN Packages'
+      yum:
+        name: 
+          - openvpn
+          - iperf3
+          - tcpdump
+          - policycoreutils-python
+          - mc
+        state: present
+
+    
+    - name: 'Copy Certificates'
+      copy:
+        src: keys/{{ item }}
+        dest: /etc/openvpn/server/keys/
+        mode: 0600
+      with_items:
+        ['ca.crt','ta.key','dh.pem','vpn-server.crt','vpn-server.key'] 
+    
+    - name: 'Copy Certificates'
+      copy:
+        src: keys/crl.pem
+        dest: /etc/openvpn/server/keys
+        mode: 0777   
+
+    - name: Create Logs Directory
+      file:
+        path: /var/log/openvpn
+        state: directory      
+
+
+    - name: 'Copy OpenVPN configs files'
+      copy:
+        src: conf/server.conf
+        dest: /etc/openvpn/server/
+      
+    - name: Create a symbolic link
+      file:
+        src: /etc/openvpn/server/server.conf
+        dest: /etc/openvpn/server.conf
+        state: link
+      notify:
+        - restart openvpn server     
+
+
+  handlers:
+    - name: restart network
+      systemd:
+        name: network
+        state: restarted  
+
+    - name: restart openvpn server
+      systemd:
+        name: openvpn@server
+        state: restarted
+        enabled: yes          

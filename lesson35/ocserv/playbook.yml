@@ -1,0 +1,100 @@
+---
+- name: Install OCServ
+  hosts: all
+  become: true
+
+  vars:
+    device: 'lo:2'
+    ipaddr: '10.0.0.10'
+    prefix: '32'
+    network: '10.0.0.10'
+    onboot: 'yes'
+
+  tasks:
+  
+    - name: 'Config sysctl ip_forward'
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        sysctl_set: yes
+        state: present
+        reload: yes
+      notify:
+        - restart network      
+      when: (ansible_hostname == 'ocserv')  
+
+    - name: 'Create loopback interface'
+      blockinfile:
+        path: /etc/sysconfig/network-scripts/ifcfg-lo.2
+        create: yes
+        block: |
+          DEVICE="{{ device }}"
+          IPADDR="{{ ipaddr }}"
+          PREFIX="{{ prefix }}"
+          NETWORK="{{ network }}"
+          ONBOOT="{{ onboot }}"
+      notify:
+        - restart network  
+      when: (ansible_hostname == 'ocserv') 
+
+    - name: 'Install epel-release'
+      yum:
+        name: epel-release
+        state: present   
+
+    - name: 'Install Packages Server'
+      yum:
+        name: 
+          - ocserv
+          - gnutls-utils
+        state: present 
+      when: (ansible_hostname == 'ocserv')    
+
+    - name: 'Install Packages Client'
+      yum:
+        name: 
+          - openconnect
+        state: present 
+      when: (ansible_hostname == 'client') 
+
+    - name: 'Copy Certificates'
+      copy:
+        src: conf/cert/{{ item }}
+        dest: /etc/ocserv/ssl/
+        mode: 0600
+      with_items:
+        ['server-cert.pem','server-key.pem','ca-cert.pem'] 
+      when: (ansible_hostname == 'ocserv')    
+
+
+    - name: 'Copy OCServ configs'
+      copy:
+        src: conf/ocserv.conf
+        dest: /etc/ocserv/
+        mode: 0600     
+      notify:
+        - restart ocserv      
+      when: (ansible_hostname == 'ocserv') 
+
+    - name:
+      shell: 
+        cmd: echo "123456" | sudo ocpasswd -c /etc/ocserv/passwd -g default user1
+      when: (ansible_hostname == 'ocserv')        
+
+    # - name: 'Start Openconnect'
+    #   shell: 
+    #     cmd: bash -c 'echo "123456" | sudo openconnect -q -b --servercert pin-sha256:GtjIhKWDoR62JGeWj+78xlqWVYOU/KG9SRTKKWkXfxM= 192.168.50.10:443 --user user1 --passwd-on-stdin'
+    #   when: (ansible_hostname == 'client')  
+
+
+  handlers:
+    - name: restart network
+      systemd:
+        name: network
+        state: restarted  
+
+    - name: restart ocserv
+      systemd:
+        name: ocserv
+        state: restarted
+        enabled: yes       

@@ -26,7 +26,7 @@
 
 ## Решение
 
-Решением являемся настроеный стенд vagrantfile разворачиваемый с помощью [Ansible](playbook.yml).
+Решением являемся настроеный стенд [vagrantfile](vagrantfile) разворачиваемый с помощью [Ansible](playbook.yml).
 
 Структура стенда:
 
@@ -40,7 +40,7 @@
 # ss -ltunp
 
 Netid State		Recv-Q Send-Q	Local 	Address:Port 		Peer	Address:Port              
-tcp   LISTEN     0      128		        127.0.0.1:3000    	*:*     users:(("hello",pid=7079,fd=3)) 
+tcp   LISTEN     0      128				127.0.0.1:3000    	*:*     users:(("hello",pid=7079,fd=3)) 
 tcp   LISTEN     0      10				127.0.0.1:8000		*:*     users:(("python",pid=6931,fd=4))
 tcp   LISTEN     0      128				127.0.0.1:9000  	*:* 	users:(("php-fpm",pid=7160,fd=0),("php-fpm",pid=7159,fd=0),("php-fpm",pid=7158,fd=0),("php-fpm",pid=7157,fd=0),("php-fpm",pid=7156,fd=0),("php-fpm",pid=7155,fd=6))
 ```
@@ -58,8 +58,8 @@ tcp   LISTEN     0      128				127.0.0.1:9000  	*:* 	users:(("php-fpm",pid=7160,
 
 Netid State		Recv-Q Send-Q	Local 	Address:Port 		Peer	Address:Port  
 
-tcp   LISTEN     0      128    			*:8080  			*:*		users:(("nginx",pid=7006,fd=11),("nginx",pid=7005,fd=11))
-tcp   LISTEN     0      128             *:8081				*:*		users:(("nginx",pid=7006,fd=9),("nginx",pid=7005,fd=9))
+tcp   LISTEN     0      128				*:8080  			*:*		users:(("nginx",pid=7006,fd=11),("nginx",pid=7005,fd=11))
+tcp   LISTEN     0      128				*:8081				*:*		users:(("nginx",pid=7006,fd=9),("nginx",pid=7005,fd=9))
 tcp   LISTEN     0      128				*:8082				*:*		users:(("nginx",pid=7006,fd=10),("nginx",pid=7005,fd=10))
 ```
 

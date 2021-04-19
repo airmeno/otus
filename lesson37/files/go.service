@@ -1,0 +1,11 @@
+[Unit]
+Description=Go
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/home/vagrant/go/
+ExecStart=/home/vagrant/go/hello
+
+[Install]
+WantedBy=multi-user.target

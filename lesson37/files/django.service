@@ -1,0 +1,11 @@
+[Unit]
+Description=Django
+
+[Service]
+Type=simple
+WorkingDirectory=/home/vagrant/django_project
+ExecStart=/bin/python manage.py runserver
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

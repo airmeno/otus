@@ -23,7 +23,7 @@
 
 [Vagrantfile](vagrantfile) разворачивает стенд с настроеным MySQL (Percona) в Master-Slave.
 
-> В vagrantfile-е закомментирован метод развертывания стенда через скрипт. По умолчанию разворачивается через Ansible.
+> В vagrantfile-е закомментирован метод развертывания стенда через скрипт. По умолчанию разворачивается через [Ansible](playbook.yml).
 
 ### Установка Percona
 
@@ -80,7 +80,7 @@ mysql> show variables like 'gtid_mode';
 ```
 
 
-Пользователя для репликации с правами на репликацию:
+Пользователь для репликации с правами на репликацию:
 
 ```
 mysql -e "create user 'repl'@'%' identified by 'Otus#Linux2021';"

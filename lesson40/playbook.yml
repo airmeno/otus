@@ -1,0 +1,172 @@
+---
+- name: Percona Master & Slave Playbook
+  hosts: all
+  become: true
+
+  vars:
+    mysql_config_dir: /etc/my.cnf.d
+    mysql_root_password: "Otus#Linux2021"
+    mysql_root_mycnf_path: /root/.my.cnf
+
+    mysql_db_name: bet
+    mysql_db_dump_path: /vagrant/conf/bet.dmp
+
+    mysql_replication_user: 'repl'
+    mysql_replication_user_password: 'Otus#Linux2021'
+    mysql_replication_user_privilege: '*.*:REPLICATION SLAVE'
+    mysql_replication_ignored_tables:
+      - bet.events_on_demand
+      - bet.v_same_event
+    mysql_replication_dump_path: /tmp/master.sql
+
+    mysql_master_ip: '192.168.50.10'
+    mysql_master_port: '3306'
+    mysql_master_user: 'repl'
+    mysql_master_password: 'Otus#Linux2021'
+    mysql_master_auto_position: 'yes'
+
+    mysql_replication_config_file: /etc/my.cnf.d/05-binlog.cnf
+    mysql_replication_config_base: /etc/my.cnf.d/01-base.cnf
+
+  tasks:
+
+    - name: Install packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - https://repo.percona.com/yum/percona-release-latest.noarch.rpm
+        - Percona-Server-server-57
+        - MySQL-python
+
+    - name: Copy MySQL configs
+      copy:
+        src: "conf/conf.d/"
+        dest: "{{ mysql_config_dir }}/"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: start mysqld
+      systemd:
+        name: mysqld
+        state: started
+        enabled: yes
+
+    - name: Get temporary generated root password
+      shell: grep 'root@localhost:' /var/log/mysqld.log | awk '{print $11}'
+      register: temporary_root_password
+      args:
+        creates: "{{ mysql_root_mycnf_path }}"
+
+    - name: Update root password
+      shell: >
+        mysql -uroot -p'{{ temporary_root_password.stdout }}' --connect-expired-password
+        -e "ALTER USER USER() IDENTIFIED BY '{{ mysql_root_password }}';"
+      args:
+        creates: "{{ mysql_root_mycnf_path }}"
+
+    - name: Copy root my.cnf file
+      template:
+        src: conf/my.cnf.j2
+        dest: "{{ mysql_root_mycnf_path }}"
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Create database
+      mysql_db:
+        name: "{{ mysql_db_name }}"
+        state: present
+
+    - name: restore database
+      mysql_db:
+        state: import
+        name: "{{ mysql_db_name }}"
+        target: "{{ mysql_db_dump_path }}"
+
+    - name: Config Master
+      block:
+        - name: Create user for replication
+          mysql_user:
+            name: "{{ mysql_replication_user }}"
+            password: "{{ mysql_replication_user_password }}"
+            priv: "{{ mysql_replication_user_privilege }}"
+            host: '%'
+            state: present
+
+        - name: Create database dump
+          mysql_db:
+            state: dump
+            name: all
+            ignore_tables: "{{ mysql_replication_ignored_tables }}"
+            target: "{{ mysql_replication_dump_path }}"
+          
+        - name: Pull dump file from master to host
+          fetch:
+            src: "{{ mysql_replication_dump_path }}"
+            dest: "{{ mysql_replication_dump_path }}"
+            flat: yes
+      when: ansible_hostname == 'master'       
+
+    - name: Config Slave 
+      block:
+
+        - name: 'Config base.cnf'
+          lineinfile:
+            path:  "{{ mysql_replication_config_base }}"
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+          with_items:
+            - { regexp: '^server-id = 1', line: 'server-id = 2'}
+          notify:
+            - restart mysqld            
+    
+        - name: Push dump file from host to slave
+          copy:
+            src: "{{ mysql_replication_dump_path }}"
+            dest: "{{ mysql_replication_dump_path }}"
+
+        - name: Edit replication config
+          replace:
+            path: "{{ mysql_replication_config_file }}"
+            regexp: '^#(replicate-ignore-table)'
+            replace: '\1'
+          notify: 
+            - restart mysqld
+
+        - name: Create database
+          mysql_db:
+            name: "{{ mysql_db_name }}"
+            state: present
+
+        - name: reset master
+          shell: mysql -e "reset master;"
+
+        - name: restore database
+          mysql_db:
+            name: "{{ mysql_db_name }}"
+            state: import
+            target: "{{ mysql_replication_dump_path }}"
+
+        - name: Change master to host "master"
+          mysql_replication:
+            mode: changemaster
+            master_host: "{{ mysql_master_ip }}"
+            master_port: "{{ mysql_master_port }}"
+            master_user: "{{ mysql_master_user }}"
+            master_password: "{{ mysql_master_password }}"
+            master_auto_position: "{{ mysql_master_auto_position }}"
+
+        - name: Start slave
+          mysql_replication:
+            mode: startslave      
+      when: ansible_hostname == 'slave'      
+
+
+  handlers:
+  
+    - name: restart mysqld
+      systemd:
+        name: mysql
+        state: restarted      
